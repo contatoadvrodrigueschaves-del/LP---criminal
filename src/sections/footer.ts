@@ -41,6 +41,14 @@ export function renderFooter(): void {
               </div>
             </dl>
           </div>
+
+          <div class="flex items-center gap-3 md:justify-end">
+            <img src="/logo-mark.png" alt="Rodrigues Chaves Advocacia" width="48" height="48" class="h-12 w-12" />
+            <div class="font-serif leading-tight text-stone-200">
+              <p class="text-base">Rodrigues Chaves</p>
+              <p class="text-sm tracking-wide text-stone-400">ADVOCACIA</p>
+            </div>
+          </div>
         </div>
 
         <p class="mt-10 border-t border-graphite-800 pt-6 text-xs leading-relaxed text-stone-500">

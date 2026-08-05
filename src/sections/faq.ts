@@ -33,8 +33,15 @@ export function renderFaq(): void {
   const container = mount(
     'faq',
     `
-    <div class="border-t border-graphite-700 bg-graphite-900">
-      <div class="mx-auto max-w-3xl px-6 py-16 md:py-24 lg:px-8">
+    <div class="relative overflow-hidden border-t border-graphite-700 bg-graphite-900">
+      <img
+        src="/logo-watermark.png"
+        alt=""
+        aria-hidden="true"
+        class="pointer-events-none absolute -right-24 top-1/2 h-[26rem] w-[26rem] -translate-y-1/2 select-none opacity-[0.06] md:h-[34rem] md:w-[34rem]"
+      />
+
+      <div class="relative mx-auto max-w-3xl px-6 py-16 md:py-24 lg:px-8">
         <h2 data-reveal class="text-balance text-2xl font-medium text-stone-50 md:text-3xl">
           Perguntas frequentes
         </h2>

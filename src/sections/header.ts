@@ -9,7 +9,10 @@ export function renderHeader(): void {
     `
     <div class="sticky top-0 z-40 border-b border-graphite-800 bg-graphite-950/95 backdrop-blur">
       <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4 lg:px-8">
-        <span class="font-serif text-base text-stone-50">Rodrigues Chaves <span class="text-bronze-400">Advocacia</span></span>
+        <span class="flex items-center gap-2.5">
+          <img src="/logo-mark.png" alt="" width="28" height="28" class="h-7 w-7" />
+          <span class="font-serif text-base text-stone-50">Rodrigues Chaves <span class="text-bronze-400">Advocacia</span></span>
+        </span>
         <a
           href="${buildWhatsAppLink(HEADER_MESSAGE)}"
           target="_blank"

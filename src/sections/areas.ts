@@ -39,20 +39,29 @@ export function renderAreas(): void {
   mount(
     'areas',
     `
-    <div class="mx-auto max-w-5xl px-6 py-16 md:py-24 lg:px-8">
-      <h2 data-reveal class="text-balance max-w-2xl text-2xl font-medium text-stone-50 md:text-3xl">
-        Áreas de atuação
-      </h2>
+    <div class="relative overflow-hidden">
+      <img
+        src="/logo-watermark.png"
+        alt=""
+        aria-hidden="true"
+        class="pointer-events-none absolute -left-32 bottom-0 h-[24rem] w-[24rem] select-none opacity-[0.05] md:h-[30rem] md:w-[30rem]"
+      />
 
-      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        ${AREAS.map(
-          (area, index) => `
-          <div data-reveal style="--reveal-delay: ${(index % 4) * 70}ms" class="rounded border border-graphite-700 bg-graphite-900 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-bronze-600/60">
-            <h3 class="text-base font-medium text-stone-50">${area.title}</h3>
-            <p class="mt-2 text-sm leading-relaxed text-stone-400">${area.text}</p>
-          </div>
-        `,
-        ).join('')}
+      <div class="relative mx-auto max-w-5xl px-6 py-16 md:py-24 lg:px-8">
+        <h2 data-reveal class="text-balance max-w-2xl text-2xl font-medium text-stone-50 md:text-3xl">
+          Áreas de atuação
+        </h2>
+
+        <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          ${AREAS.map(
+            (area, index) => `
+            <div data-reveal style="--reveal-delay: ${(index % 4) * 70}ms" class="rounded border border-graphite-700 bg-graphite-900 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-bronze-600/60">
+              <h3 class="text-base font-medium text-stone-50">${area.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-stone-400">${area.text}</p>
+            </div>
+          `,
+          ).join('')}
+        </div>
       </div>
     </div>
     `,
