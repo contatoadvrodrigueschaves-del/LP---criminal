@@ -1,0 +1,190 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-serif: 'Fraunces', ui-serif, Georgia, serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  /* Grafite / azul-marinho profundo */
+  --color-graphite-950: #0b0e14;
+  --color-graphite-900: #12161f;
+  --color-graphite-800: #1a2029;
+  --color-graphite-700: #242c38;
+  --color-graphite-600: #333d4c;
+
+  /* Bronze / dourado envelhecido */
+  --color-bronze-300: #d9c191;
+  --color-bronze-400: #c9a876;
+  --color-bronze-500: #b08d57;
+  --color-bronze-600: #8a6d40;
+  --color-bronze-700: #6b5330;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-graphite-950);
+    background-image:
+      linear-gradient(rgba(176, 141, 87, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(176, 141, 87, 0.05) 1px, transparent 1px);
+    background-size: 48px 48px;
+    background-attachment: fixed;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-serif);
+    letter-spacing: -0.01em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-bronze-400);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-bronze-600);
+    color: var(--color-graphite-950);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Scroll-reveal: elementos aparecem com fade + leve translação ao entrar na tela */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Traço de linha se desenhando (motivo "evidência digital") */
+[data-draw-line] {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-draw-line] {
+    animation: draw-line 1.4s ease-out forwards;
+    animation-delay: var(--draw-delay, 0ms);
+  }
+
+  [data-pulse-dot] {
+    animation: pulse-dot 2.6s ease-in-out infinite;
+    animation-delay: var(--draw-delay, 0ms);
+  }
+}
+
+@keyframes draw-line {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.35);
+  }
+}
+
+/* Botão flutuante de WhatsApp: entrada + brilho sutil para chamar atenção */
+@media (prefers-reduced-motion: no-preference) {
+  [data-whatsapp-sticky] {
+    animation: whatsapp-enter 0.5s ease-out 0.8s both;
+  }
+
+  [data-whatsapp-sticky]::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: inherit;
+    background: var(--color-bronze-500);
+    opacity: 0;
+    z-index: -1;
+    animation: whatsapp-glow 3.2s ease-in-out 1.5s infinite;
+  }
+}
+
+@keyframes whatsapp-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes whatsapp-glow {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(1.08);
+  }
+}
+
+/* Accordion do FAQ: chevron gira ao expandir */
+[data-accordion-trigger][aria-expanded='true'] svg {
+  transform: rotate(180deg);
+}
+
+/* Modal de triagem: fade + leve escala na abertura/fechamento */
+[data-triagem-overlay] {
+  opacity: 0;
+  transition: opacity 0.25s ease-out;
+}
+
+[data-triagem-overlay].is-open {
+  opacity: 1;
+}
+
+[data-triagem-panel] {
+  transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+  transform: translateY(12px) scale(0.97);
+  opacity: 0;
+}
+
+[data-triagem-overlay].is-open [data-triagem-panel] {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  [data-triagem-overlay],
+  [data-triagem-panel],
+  [data-accordion-panel] {
+    transition: none;
+  }
+}
