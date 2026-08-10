@@ -9,7 +9,7 @@ const HERO_MESSAGE =
 
 export function renderHero(): void {
   const container = mount(
-    'hero',
+    'inicio',
     `
     <div class="relative overflow-hidden border-b border-graphite-700 bg-graphite-950">
       <svg

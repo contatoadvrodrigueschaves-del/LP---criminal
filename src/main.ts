@@ -12,6 +12,7 @@ import { renderTriagemCta } from './sections/triagem-cta';
 import { renderFooter } from './sections/footer';
 import { mountStickyWhatsApp } from './components/whatsapp-button';
 import { initScrollReveal } from './lib/scroll-reveal';
+import { initHashScroll } from './lib/hash-scroll';
 
 renderHeader();
 renderHero();
@@ -26,3 +27,4 @@ renderFooter();
 
 mountStickyWhatsApp();
 initScrollReveal();
+initHashScroll();
