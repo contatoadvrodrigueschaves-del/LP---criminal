@@ -1,5 +1,11 @@
 import { criarRespostasVazias, type SituacaoValue, type TriagemRespostas } from '../types/triagem';
-import { ETAPA_OPTIONS, SITUACAO_OPTIONS, URGENCIA_OPTIONS, labelFor } from './steps';
+import {
+  ETAPA_OPTIONS,
+  SITUACAO_OPTIONS,
+  URGENCIA_OPTIONS,
+  getTriagemTrackingData,
+  labelFor,
+} from './steps';
 import { montarMensagemTriagem } from './whatsapp-message';
 import { buildWhatsAppLink } from '../components/whatsapp-button';
 import {
@@ -350,11 +356,12 @@ function renderConfirmacao(): void {
     // TODO(lead-capture): esse é o ponto de confirmação final do usuário —
     // alternativa ao envio no passo de contato, caso prefira registrar o
     // lead somente após a confirmação explícita.
-    const areaInteresse = labelFor(SITUACAO_OPTIONS, respostas.situacao);
+    const areaInteresseLabel = labelFor(SITUACAO_OPTIONS, respostas.situacao);
     const urgenciaLabel = labelFor(URGENCIA_OPTIONS, respostas.urgencia);
+    const tracking = getTriagemTrackingData(respostas.situacao, respostas.urgencia);
 
-    trackTriagemComplete(areaInteresse, urgenciaLabel);
-    trackTriagemConcluida(areaInteresse, urgenciaLabel);
+    trackTriagemComplete(areaInteresseLabel, urgenciaLabel);
+    trackTriagemConcluida(tracking.areaInteresse, tracking.urgenciaCode, tracking.valorLead);
 
     const href = (event.currentTarget as HTMLAnchorElement).href;
     window.setTimeout(() => {

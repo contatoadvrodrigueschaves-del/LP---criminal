@@ -53,16 +53,17 @@ export function trackTriagemComplete(situacao: string, urgencia: string): void {
  * Empurra direto pro dataLayer (em vez de passar por gtag/fbq) porque é o
  * GTM quem vai configurar o gatilho de conversão em cima desse evento.
  */
-export function trackTriagemConcluida(areaInteresse: string, urgencia: string): void {
+export function trackTriagemConcluida(areaInteresse: string, urgencia: string, valorLead: number): void {
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
     event: 'triagem_concluida',
     area_interesse: areaInteresse,
     urgencia,
+    valor_lead: valorLead,
   });
   sessionStorage.setItem('triagem_ok', '1');
 
   if (import.meta.env.DEV) {
-    console.debug('[dataLayer] triagem_concluida', { areaInteresse, urgencia });
+    console.debug('[dataLayer] triagem_concluida', { areaInteresse, urgencia, valorLead });
   }
 }
