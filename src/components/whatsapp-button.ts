@@ -2,8 +2,10 @@ import { trackWhatsAppClick } from '../lib/analytics';
 
 export const WHATSAPP_NUMBER = '5511978651383';
 
-export function buildWhatsAppLink(message: string): string {
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+export function buildWhatsAppLink(message: string, ref?: string): string {
+  const params = new URLSearchParams({ text: message });
+  if (ref) params.set('ref', ref);
+  return `https://wa.me/${WHATSAPP_NUMBER}?${params.toString()}`;
 }
 
 const DEFAULT_MESSAGE =

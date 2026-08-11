@@ -4,9 +4,12 @@ import { montarMensagemTriagem } from './whatsapp-message';
 import { buildWhatsAppLink } from '../components/whatsapp-button';
 import {
   trackTriagemComplete,
+  trackTriagemConcluida,
   trackTriagemStart,
   trackTriagemStepComplete,
 } from '../lib/analytics';
+
+const WHATSAPP_REDIRECT_DELAY_MS = 300;
 
 const TOTAL_STEPS = 4;
 
@@ -324,7 +327,7 @@ function renderConfirmacao(): void {
         ← Editar respostas
       </button>
       <a
-        href="${buildWhatsAppLink(montarMensagemTriagem(respostas))}"
+        href="${buildWhatsAppLink(montarMensagemTriagem(respostas), 'triagem')}"
         target="_blank"
         rel="noopener noreferrer"
         data-triagem-confirm
@@ -341,14 +344,22 @@ function renderConfirmacao(): void {
     render();
   });
 
-  content.querySelector('[data-triagem-confirm]')?.addEventListener('click', () => {
+  content.querySelector<HTMLAnchorElement>('[data-triagem-confirm]')?.addEventListener('click', (event) => {
+    event.preventDefault();
+
     // TODO(lead-capture): esse é o ponto de confirmação final do usuário —
     // alternativa ao envio no passo de contato, caso prefira registrar o
     // lead somente após a confirmação explícita.
-    trackTriagemComplete(
-      labelFor(SITUACAO_OPTIONS, respostas.situacao),
-      labelFor(URGENCIA_OPTIONS, respostas.urgencia),
-    );
+    const areaInteresse = labelFor(SITUACAO_OPTIONS, respostas.situacao);
+    const urgenciaLabel = labelFor(URGENCIA_OPTIONS, respostas.urgencia);
+
+    trackTriagemComplete(areaInteresse, urgenciaLabel);
+    trackTriagemConcluida(areaInteresse, urgenciaLabel);
+
+    const href = (event.currentTarget as HTMLAnchorElement).href;
+    window.setTimeout(() => {
+      window.open(href, '_blank', 'noopener,noreferrer');
+    }, WHATSAPP_REDIRECT_DELAY_MS);
   });
 }
 

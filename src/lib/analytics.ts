@@ -1,19 +1,25 @@
 /**
- * Wrapper central de tracking. Os SDKs do GA4 e do Meta Pixel são carregados
- * via <script> no index.html (ver comentários TODO lá) — aqui apenas
- * despachamos os eventos, sem depender de os SDKs estarem presentes.
+ * Wrapper central de tracking.
  *
- * TODO(analytics): depois de habilitar os SDKs no index.html, validar os
- * eventos no GA4 DebugView e no Meta Pixel Helper.
+ * O Google Tag Manager (GTM-W2ZPVFPK, ver index.html) é quem gerencia GA4 e
+ * Meta Pixel — este arquivo não carrega esses SDKs diretamente. Eventos
+ * customizados são enviados via window.dataLayer.push(...), que o GTM lê.
+ *
+ * As funções track*() legadas abaixo (que chamam window.gtag/window.fbq)
+ * ficam inertes enquanto esses SDKs não forem configurados como tags no
+ * GTM — mantidas por compatibilidade, mas o caminho oficial agora é o
+ * dataLayer.
  */
 
 type Gtag = (...args: unknown[]) => void;
 type Fbq = (...args: unknown[]) => void;
+type DataLayerEvent = Record<string, unknown>;
 
 declare global {
   interface Window {
     gtag?: Gtag;
     fbq?: Fbq;
+    dataLayer?: DataLayerEvent[];
   }
 }
 
@@ -40,4 +46,23 @@ export function trackTriagemStepComplete(step: number, stepName: string): void {
 
 export function trackTriagemComplete(situacao: string, urgencia: string): void {
   track('triagem_complete', { situacao, urgencia });
+}
+
+/**
+ * Evento consumido pelo GTM/Google Ads para marcar a triagem como concluída.
+ * Empurra direto pro dataLayer (em vez de passar por gtag/fbq) porque é o
+ * GTM quem vai configurar o gatilho de conversão em cima desse evento.
+ */
+export function trackTriagemConcluida(areaInteresse: string, urgencia: string): void {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: 'triagem_concluida',
+    area_interesse: areaInteresse,
+    urgencia,
+  });
+  sessionStorage.setItem('triagem_ok', '1');
+
+  if (import.meta.env.DEV) {
+    console.debug('[dataLayer] triagem_concluida', { areaInteresse, urgencia });
+  }
 }
