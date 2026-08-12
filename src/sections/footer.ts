@@ -38,7 +38,7 @@ export function renderFooter(): void {
               </div>
               <div class="flex gap-2">
                 <dt class="text-stone-500">Atendimento:</dt>
-                <dd>7h às 23h, todos os dias</dd>
+                <dd>Segunda a sexta, em horário comercial</dd>
               </div>
               <div class="flex gap-2">
                 <dt class="text-stone-500">E-mail:</dt>

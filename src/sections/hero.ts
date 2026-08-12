@@ -32,19 +32,9 @@ export function renderHero(): void {
       </svg>
 
       <div class="relative mx-auto flex max-w-5xl flex-col gap-5 px-6 py-10 md:gap-8 md:py-28 lg:px-8">
-        <div data-reveal class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm font-medium tracking-wide text-bronze-400">
-          <span class="flex items-center gap-3">
-            <span class="h-px w-8 bg-bronze-500"></span>
-            Defesa Criminal · São Paulo
-          </span>
-
-          <span class="inline-flex items-center gap-2 rounded-full border border-bronze-600/40 bg-graphite-900/70 px-3 py-1 text-xs text-bronze-300">
-            <span class="relative flex h-1.5 w-1.5">
-              <span class="absolute inline-flex h-full w-full rounded-full bg-bronze-400 opacity-60 motion-safe:animate-ping"></span>
-              <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-bronze-400"></span>
-            </span>
-            Plantão criminal · 7h às 23h, todos os dias
-          </span>
+        <div data-reveal class="flex items-center gap-3 text-sm font-medium tracking-wide text-bronze-400">
+          <span class="h-px w-8 bg-bronze-500"></span>
+          Defesa Criminal · São Paulo
         </div>
 
         <h1 data-reveal style="--reveal-delay: 80ms" class="text-balance max-w-3xl text-[1.75rem] font-medium leading-[1.15] text-stone-50 md:text-5xl md:leading-tight">
