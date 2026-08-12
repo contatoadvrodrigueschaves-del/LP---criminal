@@ -7,7 +7,7 @@ const CTA_MESSAGE = 'Olá, gostaria de falar pelo WhatsApp com o escritório.';
 
 export function renderTriagemCta(): void {
   const container = mount(
-    'triagem-cta',
+    'triagem',
     `
     <div class="mx-auto max-w-3xl px-6 py-16 text-center md:py-24 lg:px-8">
       <h2 data-reveal class="text-balance text-2xl font-medium text-stone-50 md:text-3xl">
