@@ -1,5 +1,6 @@
 import { mount } from '../lib/dom';
-import { attachWhatsAppTracking, buildWhatsAppLink } from '../components/whatsapp-button';
+import { attachWhatsAppTracking, buildWhatsAppLink, WHATSAPP_ICON_SVG } from '../components/whatsapp-button';
+import { PHONE_DISPLAY, PHONE_HREF } from '../components/phone-link';
 import { openTriagemModal } from '../triagem/triagem';
 import { SITUACAO_OPTIONS } from '../triagem/steps';
 import type { SituacaoValue } from '../types/triagem';
@@ -30,17 +31,32 @@ export function renderHero(): void {
         <circle data-pulse-dot style="--draw-delay: 1760ms" cx="260" cy="300" r="4" fill="#b08d57" />
       </svg>
 
-      <div class="relative mx-auto flex max-w-5xl flex-col gap-8 px-6 py-20 md:py-28 lg:px-8">
-        <div data-reveal class="flex items-center gap-3 text-sm font-medium tracking-wide text-bronze-400">
-          <span class="h-px w-8 bg-bronze-500"></span>
-          Defesa Criminal · São Paulo
+      <div class="relative mx-auto flex max-w-5xl flex-col gap-5 px-6 py-10 md:gap-8 md:py-28 lg:px-8">
+        <div data-reveal class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm font-medium tracking-wide text-bronze-400">
+          <span class="flex items-center gap-3">
+            <span class="h-px w-8 bg-bronze-500"></span>
+            Defesa Criminal · São Paulo
+          </span>
+
+          <span class="inline-flex items-center gap-2 rounded-full border border-bronze-600/40 bg-graphite-900/70 px-3 py-1 text-xs text-bronze-300">
+            <span class="relative flex h-1.5 w-1.5">
+              <span class="absolute inline-flex h-full w-full rounded-full bg-bronze-400 opacity-60 motion-safe:animate-ping"></span>
+              <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-bronze-400"></span>
+            </span>
+            Plantão criminal · 7h às 23h, todos os dias
+          </span>
         </div>
 
-        <h1 data-reveal style="--reveal-delay: 80ms" class="text-balance max-w-3xl text-3xl font-medium leading-tight text-stone-50 md:text-5xl">
+        <h1 data-reveal style="--reveal-delay: 80ms" class="text-balance max-w-3xl text-[1.75rem] font-medium leading-[1.15] text-stone-50 md:text-5xl md:leading-tight">
           Quando a acusação envolve provas digitais, a defesa precisa analisar cada detalhe.
         </h1>
 
-        <p data-reveal style="--reveal-delay: 160ms" class="max-w-2xl text-balance text-base leading-relaxed text-stone-300 md:text-lg">
+        <p data-reveal style="--reveal-delay: 140ms" class="text-balance text-base leading-relaxed text-stone-300 md:hidden">
+          Intimação, bens bloqueados, busca e apreensão ou investigação por crimes financeiros: a
+          análise técnica das provas digitais pode ser determinante para a defesa.
+        </p>
+
+        <p data-reveal style="--reveal-delay: 160ms" class="hidden max-w-2xl text-balance text-base leading-relaxed text-stone-300 md:block md:text-lg">
           Se você foi intimado, teve bens bloqueados, passou por uma busca e apreensão ou está sendo
           investigado por crimes financeiros, é importante compreender seus direitos desde o início da
           investigação. Hoje, muitas acusações são baseadas em mensagens, extratos bancários,
@@ -48,11 +64,45 @@ export function renderHero(): void {
           técnica dessas provas pode ser determinante para a condução da defesa.
         </p>
 
-        <p data-reveal style="--reveal-delay: 240ms" class="font-serif text-lg text-bronze-300 md:text-xl">
-          Entenda sua situação em poucos minutos.
-        </p>
+        <div data-reveal style="--reveal-delay: 200ms" class="flex flex-col gap-3">
+          <div class="flex flex-col gap-3 sm:flex-row">
+            <a
+              href="${buildWhatsAppLink(HERO_MESSAGE)}"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-whatsapp-source="hero"
+              class="inline-flex items-center justify-center gap-2 rounded bg-bronze-500 px-6 py-3.5 text-sm font-semibold text-graphite-950 shadow-lg shadow-black/30 transition duration-200 hover:scale-[1.02] hover:bg-bronze-400"
+            >
+              ${WHATSAPP_ICON_SVG}
+              Falar pelo WhatsApp
+            </a>
+            <button
+              type="button"
+              data-start-triagem
+              class="inline-flex items-center justify-center gap-2 rounded border border-bronze-500 px-6 py-3.5 text-sm font-semibold text-bronze-300 transition duration-200 hover:scale-[1.02] hover:bg-graphite-800"
+            >
+              Iniciar triagem
+            </button>
+          </div>
 
-        <div data-reveal style="--reveal-delay: 320ms" class="rounded-lg border border-bronze-600/30 bg-graphite-900/60 p-5 sm:p-6">
+          <p class="text-sm text-stone-400">
+            Ou ligue agora:
+            <a
+              href="${PHONE_HREF}"
+              data-tel-source="hero"
+              class="font-medium text-bronze-300 underline decoration-bronze-600/60 underline-offset-4 transition hover:text-bronze-200"
+            >
+              ${PHONE_DISPLAY}
+            </a>
+          </p>
+
+          <p class="text-sm leading-relaxed text-stone-300">
+            Atendimento para casos urgentes, incluindo prisão em flagrante, buscas e apreensões e
+            bloqueio de bens.
+          </p>
+        </div>
+
+        <div data-reveal style="--reveal-delay: 260ms" class="rounded-lg border border-bronze-600/30 bg-graphite-900/60 p-4 sm:p-6">
           <p class="text-sm font-medium text-stone-200">Qual dessas situações é a sua?</p>
           <div class="mt-3 flex flex-wrap gap-2">
             ${SITUACAO_OPTIONS.map(
@@ -60,37 +110,13 @@ export function renderHero(): void {
               <button
                 type="button"
                 data-quick-situacao="${option.value}"
-                class="rounded-full border border-bronze-600/50 px-4 py-2 text-sm text-stone-200 transition duration-200 hover:scale-[1.03] hover:border-bronze-400 hover:bg-graphite-800"
+                class="rounded-full border border-bronze-600/50 px-3 py-1.5 text-xs text-stone-200 transition duration-200 hover:scale-[1.03] hover:border-bronze-400 hover:bg-graphite-800 sm:px-4 sm:py-2 sm:text-sm"
               >
                 ${option.label}
               </button>
             `,
             ).join('')}
           </div>
-
-          <div class="mt-5 flex flex-col gap-3 border-t border-graphite-800 pt-5 sm:flex-row">
-            <button
-              type="button"
-              data-start-triagem
-              class="inline-flex items-center justify-center gap-2 rounded bg-bronze-500 px-6 py-3 text-sm font-semibold text-graphite-950 shadow-lg shadow-black/30 transition duration-200 hover:scale-[1.02] hover:bg-bronze-400"
-            >
-              Iniciar triagem completa
-            </button>
-            <a
-              href="${buildWhatsAppLink(HERO_MESSAGE)}"
-              target="_blank"
-              rel="noopener noreferrer"
-              data-whatsapp-source="hero"
-              class="inline-flex items-center justify-center gap-2 rounded border border-bronze-500 px-6 py-3 text-sm font-semibold text-bronze-300 transition duration-200 hover:scale-[1.02] hover:bg-graphite-800"
-            >
-              Falar pelo WhatsApp
-            </a>
-          </div>
-
-          <p class="mt-3 text-xs text-stone-400">
-            Atendimento para casos urgentes, incluindo prisão em flagrante, buscas e apreensões e
-            bloqueio de bens.
-          </p>
         </div>
       </div>
     </div>

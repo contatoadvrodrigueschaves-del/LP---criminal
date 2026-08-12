@@ -104,7 +104,9 @@ export function openTriagemModal(prefill?: { situacao: SituacaoValue }): void {
 
   panel.classList.remove('hidden');
   panel.classList.add('flex');
-  document.body.classList.add('overflow-hidden');
+  // `triagem-aberta` esconde a barra fixa de contato (ver style.css) para que
+  // ela não fique sobre os controles do modal no mobile.
+  document.body.classList.add('overflow-hidden', 'triagem-aberta');
 
   // dupla rAF garante que o navegador aplique o estado inicial (opacidade 0)
   // antes de adicionar a classe que dispara a transição de entrada.
@@ -121,7 +123,7 @@ export function openTriagemModal(prefill?: { situacao: SituacaoValue }): void {
 export function closeTriagemModal(): void {
   if (!panel) return;
   panel.classList.remove('is-open');
-  document.body.classList.remove('overflow-hidden');
+  document.body.classList.remove('overflow-hidden', 'triagem-aberta');
   lastFocusedElement?.focus();
 
   window.setTimeout(() => {

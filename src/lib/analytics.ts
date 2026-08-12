@@ -67,3 +67,25 @@ export function trackTriagemConcluida(areaInteresse: string, urgencia: string, v
     console.debug('[dataLayer] triagem_concluida', { areaInteresse, urgencia, valorLead });
   }
 }
+
+/**
+ * Clique em qualquer link `tel:` da página.
+ *
+ * Espelha o contexto que trackWhatsAppClick envia (lá é `source`, aqui é
+ * `origem`) — a diferença é que este vai direto pro dataLayer, porque é
+ * onde o GTM consegue ler. Não há supressão pela flag `triagem_ok`: hoje
+ * essa flag só é escrita por trackTriagemConcluida e nunca lida em lugar
+ * nenhum, inclusive no fluxo do WhatsApp, então suprimir aqui criaria uma
+ * assimetria que não existe no resto do rastreamento.
+ */
+export function trackCliqueLigacao(origem: string): void {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: 'clique_ligacao',
+    origem,
+  });
+
+  if (import.meta.env.DEV) {
+    console.debug('[dataLayer] clique_ligacao', { origem });
+  }
+}
