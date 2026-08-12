@@ -59,6 +59,15 @@
   }
 }
 
+/*
+ * Âncoras de seção (/#areas, /#triagem, ...): o cabeçalho é fixo no topo, então
+ * sem essa margem a seção pararia escondida atrás dele ao rolar até a âncora.
+ */
+main > section[id],
+footer[id] {
+  scroll-margin-top: 4.5rem;
+}
+
 /* Scroll-reveal: elementos aparecem com fade + leve translação ao entrar na tela */
 [data-reveal] {
   opacity: 0;

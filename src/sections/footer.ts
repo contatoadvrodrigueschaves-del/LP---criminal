@@ -6,7 +6,7 @@ const FOOTER_MESSAGE = 'Olá, gostaria de falar com o escritório.';
 
 export function renderFooter(): void {
   const container = mount(
-    'rodape',
+    'contato',
     `
     <div class="border-t border-graphite-700 bg-graphite-950">
       <div class="mx-auto max-w-5xl px-6 py-12 lg:px-8">

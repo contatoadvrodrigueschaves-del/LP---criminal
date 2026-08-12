@@ -25,7 +25,7 @@ const ANALISE_ITEMS = [
 
 export function renderDiferencial(): void {
   mount(
-    'diferencial',
+    'provas-digitais',
     `
     <div class="relative overflow-hidden bg-graphite-950">
       <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-bronze-500/60 to-transparent"></div>

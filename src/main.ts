@@ -13,6 +13,7 @@ import { renderFooter } from './sections/footer';
 import { mountStickyCtaBar } from './components/sticky-cta-bar';
 import { initTelTracking } from './components/phone-link';
 import { initScrollReveal } from './lib/scroll-reveal';
+import { initHashScroll } from './lib/hash-scroll';
 
 renderHeader();
 renderHero();
@@ -28,3 +29,4 @@ renderFooter();
 mountStickyCtaBar();
 initTelTracking();
 initScrollReveal();
+initHashScroll();
