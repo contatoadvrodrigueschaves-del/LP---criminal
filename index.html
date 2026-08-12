@@ -2,6 +2,15 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-W2ZPVFPK');</script>
+    <!-- End Google Tag Manager -->
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Defesa Criminal e Provas Digitais em São Paulo | Rodrigues Chaves Advocacia</title>
     <meta
@@ -9,7 +18,7 @@
       content="Escritório de advocacia criminal especializado em provas digitais: extração de celular, cadeia de custódia, quebra de sigilo e crimes econômicos. Atendimento em São Paulo."
     />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://www.rodrigueschavesadv.com/" />
+    <link rel="canonical" href="https://www.rodrigueschavesadv.com.br/" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -21,7 +30,7 @@
       content="Quando a acusação envolve provas digitais, a defesa precisa analisar cada detalhe. Atuação em busca e apreensão, bloqueio de bens, crimes econômicos e mais."
     />
     <meta property="og:image" content="/og-cover.jpg" />
-    <meta property="og:url" content="https://www.rodrigueschavesadv.com/" />
+    <meta property="og:url" content="https://www.rodrigueschavesadv.com.br/" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -44,32 +53,18 @@
     />
 
     <!--
-      TODO(analytics): Google Analytics 4
-      Substituir G-XXXXXXXXXX pelo ID real de medição e descomentar.
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-      <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-XXXXXXXXXX');
-      </script>
-    -->
-
-    <!--
-      TODO(analytics): Meta Pixel
-      Substituir XXXXXXXXXXXXXXX pelo ID real do pixel e descomentar.
-      <script>
-        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-        document,'script','https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', 'XXXXXXXXXXXXXXX');
-        fbq('track', 'PageView');
-      </script>
+      TODO(analytics): GA4 e Meta Pixel não são mais instalados diretamente
+      aqui — são configurados como tags dentro do container do Google Tag
+      Manager (GTM-W2ZPVFPK, acima). Eventos customizados são enviados via
+      window.dataLayer.push(...) em src/lib/analytics.ts.
     -->
   </head>
   <body class="bg-graphite-950 text-stone-200 antialiased">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W2ZPVFPK"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     <a
       href="#conteudo"
       class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded focus:bg-bronze-500 focus:px-4 focus:py-2 focus:text-graphite-950"
@@ -92,7 +87,7 @@
 
     <footer id="rodape"></footer>
 
-    <div id="whatsapp-sticky"></div>
+    <div id="sticky-cta"></div>
     <div id="triagem-modal-root"></div>
 
     <script type="module" src="/src/main.ts"></script>

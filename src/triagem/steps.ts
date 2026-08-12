@@ -27,3 +27,52 @@ export function labelFor<T extends string>(
 ): string {
   return options.find((option) => option.value === value)?.label ?? 'Não informado';
 }
+
+/**
+ * Códigos estáveis enviados pro dataLayer/GTM — desacoplados do texto
+ * exibido na interface (que pode mudar de redação a qualquer momento) e do
+ * nome interno do enum (que pode ser refatorado por motivos de código sem
+ * relação com tracking). Qualquer mudança nesses valores deve ser combinada
+ * com quem configura os gatilhos no GTM/Google Ads.
+ */
+export const AREA_INTERESSE_CODES: Record<SituacaoValue, string> = {
+  intimacao: 'intimacao',
+  investigado: 'investigado',
+  bens_bloqueados: 'bens_bloqueados',
+  busca_apreensao: 'busca_apreensao',
+  operacao_empresa: 'operacao_empresa',
+};
+
+export type UrgenciaCode = 'alta' | 'media' | 'baixa';
+
+export const URGENCIA_CODES: Record<UrgenciaValue, UrgenciaCode> = {
+  urgente: 'alta',
+  proximos_dias: 'media',
+  apenas_informando: 'baixa',
+};
+
+const VALOR_LEAD_POR_URGENCIA: Record<UrgenciaCode, number> = {
+  alta: 200,
+  media: 120,
+  baixa: 60,
+};
+
+const CODIGO_NAO_INFORMADO = 'nao_informado';
+
+export interface TriagemTrackingData {
+  areaInteresse: string;
+  urgenciaCode: string;
+  valorLead: number;
+}
+
+/** Converte as respostas da triagem nos códigos estáveis usados no tracking. */
+export function getTriagemTrackingData(
+  situacao: SituacaoValue | null,
+  urgencia: UrgenciaValue | null,
+): TriagemTrackingData {
+  const areaInteresse = situacao ? AREA_INTERESSE_CODES[situacao] : CODIGO_NAO_INFORMADO;
+  const urgenciaCode = urgencia ? URGENCIA_CODES[urgencia] : CODIGO_NAO_INFORMADO;
+  const valorLead = urgencia ? VALOR_LEAD_POR_URGENCIA[URGENCIA_CODES[urgencia]] : 0;
+
+  return { areaInteresse, urgenciaCode, valorLead };
+}

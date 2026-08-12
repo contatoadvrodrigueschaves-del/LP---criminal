@@ -96,20 +96,29 @@ Sugestão de implementação futura: `fetch()` para um endpoint serverless
 dispare um e-mail, mantendo o redirecionamento para o WhatsApp como fallback
 garantido mesmo se a chamada falhar.
 
-## Analytics (GA4 / Meta Pixel)
+## Analytics (Google Tag Manager)
 
-Os SDKs ficam comentados em [`index.html`](index.html) com instruções de onde
-colocar os IDs reais. O wrapper de eventos já está pronto em
-[`src/lib/analytics.ts`](src/lib/analytics.ts) e dispara, independentemente
-dos SDKs estarem ativos:
+O container do GTM (`GTM-W2ZPVFPK`) está instalado direto no
+[`index.html`](index.html) — script no topo do `<head>` e `<noscript>` logo
+após a abertura do `<body>`. GA4, Meta Pixel e qualquer outra tag devem ser
+configurados **como tags dentro do GTM**, não instalados direto no código.
 
-- `whatsapp_click` — qualquer clique em um link de WhatsApp (com `source`)
-- `triagem_start` — abertura do modal de triagem
-- `triagem_step_complete` — conclusão de cada passo do formulário
-- `triagem_complete` — confirmação final antes do redirecionamento
+Eventos customizados são enviados via `window.dataLayer.push(...)` em
+[`src/lib/analytics.ts`](src/lib/analytics.ts):
 
-Para ativar: preencha os IDs nos comentários do `index.html` e descomente os
-scripts.
+- `triagem_concluida` — disparado no clique de "Confirmar e abrir WhatsApp",
+  antes do redirecionamento (que tem um atraso de ~300ms pra dar tempo da tag
+  disparar). Envia `area_interesse` (a situação identificada na triagem) e
+  `urgencia`. Também seta `sessionStorage.triagem_ok = '1'`.
+
+As funções `trackWhatsAppClick`, `trackTriagemStart`, `trackTriagemStepComplete`
+e `trackTriagemComplete` (mais antigas, chamam `window.gtag`/`window.fbq`
+diretamente) ficam inertes enquanto esses SDKs não forem configurados como
+tags no GTM — mantidas por compatibilidade, mas o caminho oficial agora é o
+`dataLayer`. Todos os links de WhatsApp são `<a href>` reais contendo `wa.me`
+(não `button`/`onClick`), para que o GTM consiga configurar um gatilho de
+clique em link de forma confiável. O link de confirmação da triagem inclui
+`&ref=triagem` na URL do `wa.me`.
 
 ## Compliance OAB
 

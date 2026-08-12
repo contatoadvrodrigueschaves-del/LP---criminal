@@ -1,5 +1,6 @@
 import { mount } from '../lib/dom';
 import { attachWhatsAppTracking, buildWhatsAppLink } from '../components/whatsapp-button';
+import { PHONE_DISPLAY, PHONE_HREF } from '../components/phone-link';
 
 const FOOTER_MESSAGE = 'Olá, gostaria de falar com o escritório.';
 
@@ -16,6 +17,14 @@ export function renderFooter(): void {
               <div class="flex gap-2">
                 <dt class="text-stone-500">Telefone:</dt>
                 <dd>
+                  <a href="${PHONE_HREF}" data-tel-source="rodape" class="hover:text-bronze-300">
+                    ${PHONE_DISPLAY}
+                  </a>
+                </dd>
+              </div>
+              <div class="flex gap-2">
+                <dt class="text-stone-500">WhatsApp:</dt>
+                <dd>
                   <a
                     href="${buildWhatsAppLink(FOOTER_MESSAGE)}"
                     target="_blank"
@@ -23,9 +32,13 @@ export function renderFooter(): void {
                     data-whatsapp-source="footer"
                     class="hover:text-bronze-300"
                   >
-                    (11) 97865-1383
+                    ${PHONE_DISPLAY}
                   </a>
                 </dd>
+              </div>
+              <div class="flex gap-2">
+                <dt class="text-stone-500">Atendimento:</dt>
+                <dd>Segunda a sexta, em horário comercial</dd>
               </div>
               <div class="flex gap-2">
                 <dt class="text-stone-500">E-mail:</dt>
@@ -50,6 +63,10 @@ export function renderFooter(): void {
             </div>
           </div>
         </div>
+
+        <p class="mt-8 text-sm text-stone-400">
+          Larissa Rodrigues Chaves — OAB/SP 527.355 · Advogada responsável
+        </p>
 
         <p class="mt-10 border-t border-graphite-800 pt-6 text-xs leading-relaxed text-stone-500">
           Esta página possui caráter exclusivamente informativo, em conformidade com o Provimento nº

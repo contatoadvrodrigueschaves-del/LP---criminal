@@ -1,12 +1,21 @@
 import { criarRespostasVazias, type SituacaoValue, type TriagemRespostas } from '../types/triagem';
-import { ETAPA_OPTIONS, SITUACAO_OPTIONS, URGENCIA_OPTIONS, labelFor } from './steps';
+import {
+  ETAPA_OPTIONS,
+  SITUACAO_OPTIONS,
+  URGENCIA_OPTIONS,
+  getTriagemTrackingData,
+  labelFor,
+} from './steps';
 import { montarMensagemTriagem } from './whatsapp-message';
 import { buildWhatsAppLink } from '../components/whatsapp-button';
 import {
   trackTriagemComplete,
+  trackTriagemConcluida,
   trackTriagemStart,
   trackTriagemStepComplete,
 } from '../lib/analytics';
+
+const WHATSAPP_REDIRECT_DELAY_MS = 300;
 
 const TOTAL_STEPS = 4;
 
@@ -95,7 +104,9 @@ export function openTriagemModal(prefill?: { situacao: SituacaoValue }): void {
 
   panel.classList.remove('hidden');
   panel.classList.add('flex');
-  document.body.classList.add('overflow-hidden');
+  // `triagem-aberta` esconde a barra fixa de contato (ver style.css) para que
+  // ela não fique sobre os controles do modal no mobile.
+  document.body.classList.add('overflow-hidden', 'triagem-aberta');
 
   // dupla rAF garante que o navegador aplique o estado inicial (opacidade 0)
   // antes de adicionar a classe que dispara a transição de entrada.
@@ -112,7 +123,7 @@ export function openTriagemModal(prefill?: { situacao: SituacaoValue }): void {
 export function closeTriagemModal(): void {
   if (!panel) return;
   panel.classList.remove('is-open');
-  document.body.classList.remove('overflow-hidden');
+  document.body.classList.remove('overflow-hidden', 'triagem-aberta');
   lastFocusedElement?.focus();
 
   window.setTimeout(() => {
@@ -324,7 +335,7 @@ function renderConfirmacao(): void {
         ← Editar respostas
       </button>
       <a
-        href="${buildWhatsAppLink(montarMensagemTriagem(respostas))}"
+        href="${buildWhatsAppLink(montarMensagemTriagem(respostas), 'triagem')}"
         target="_blank"
         rel="noopener noreferrer"
         data-triagem-confirm
@@ -341,14 +352,23 @@ function renderConfirmacao(): void {
     render();
   });
 
-  content.querySelector('[data-triagem-confirm]')?.addEventListener('click', () => {
+  content.querySelector<HTMLAnchorElement>('[data-triagem-confirm]')?.addEventListener('click', (event) => {
+    event.preventDefault();
+
     // TODO(lead-capture): esse é o ponto de confirmação final do usuário —
     // alternativa ao envio no passo de contato, caso prefira registrar o
     // lead somente após a confirmação explícita.
-    trackTriagemComplete(
-      labelFor(SITUACAO_OPTIONS, respostas.situacao),
-      labelFor(URGENCIA_OPTIONS, respostas.urgencia),
-    );
+    const areaInteresseLabel = labelFor(SITUACAO_OPTIONS, respostas.situacao);
+    const urgenciaLabel = labelFor(URGENCIA_OPTIONS, respostas.urgencia);
+    const tracking = getTriagemTrackingData(respostas.situacao, respostas.urgencia);
+
+    trackTriagemComplete(areaInteresseLabel, urgenciaLabel);
+    trackTriagemConcluida(tracking.areaInteresse, tracking.urgenciaCode, tracking.valorLead);
+
+    const href = (event.currentTarget as HTMLAnchorElement).href;
+    window.setTimeout(() => {
+      window.open(href, '_blank', 'noopener,noreferrer');
+    }, WHATSAPP_REDIRECT_DELAY_MS);
   });
 }
 

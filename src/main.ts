@@ -10,7 +10,8 @@ import { renderAreas } from './sections/areas';
 import { renderFaq } from './sections/faq';
 import { renderTriagemCta } from './sections/triagem-cta';
 import { renderFooter } from './sections/footer';
-import { mountStickyWhatsApp } from './components/whatsapp-button';
+import { mountStickyCtaBar } from './components/sticky-cta-bar';
+import { initTelTracking } from './components/phone-link';
 import { initScrollReveal } from './lib/scroll-reveal';
 
 renderHeader();
@@ -24,5 +25,6 @@ renderFaq();
 renderTriagemCta();
 renderFooter();
 
-mountStickyWhatsApp();
+mountStickyCtaBar();
+initTelTracking();
 initScrollReveal();

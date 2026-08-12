@@ -108,45 +108,30 @@
   }
 }
 
-/* Botão flutuante de WhatsApp: entrada + brilho sutil para chamar atenção */
-@media (prefers-reduced-motion: no-preference) {
-  [data-whatsapp-sticky] {
-    animation: whatsapp-enter 0.5s ease-out 0.8s both;
+/*
+ * Barra fixa de contato (mobile). Reserva espaço no fim da página para que a
+ * barra nunca cubra conteúdo clicável nem o aviso do Provimento 205/2021 no
+ * rodapé — o valor cobre a altura da barra mais a safe area do iPhone.
+ */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
   }
 
-  [data-whatsapp-sticky]::before {
-    content: '';
-    position: absolute;
-    inset: -6px;
-    border-radius: inherit;
-    background: var(--color-bronze-500);
-    opacity: 0;
-    z-index: -1;
-    animation: whatsapp-glow 3.2s ease-in-out 1.5s infinite;
+  [data-sticky-cta] {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 }
 
-@keyframes whatsapp-enter {
-  from {
-    opacity: 0;
-    transform: translateY(16px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
+/*
+ * Sem animação de entrada aqui de propósito: a barra é o CTA principal do
+ * mobile, então qualquer atraso (ou animação pausada, como acontece em aba
+ * em segundo plano) atrasaria o único caminho de contato sempre visível.
+ */
 
-@keyframes whatsapp-glow {
-  0%,
-  100% {
-    opacity: 0;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.25;
-    transform: scale(1.08);
-  }
+/* Durante a triagem, a barra sai do caminho dos controles do modal. */
+body.triagem-aberta [data-sticky-cta] {
+  display: none;
 }
 
 /* Accordion do FAQ: chevron gira ao expandir */
