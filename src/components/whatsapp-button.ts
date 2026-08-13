@@ -1,4 +1,4 @@
-import { trackWhatsAppClick } from '../lib/analytics';
+import { trackCliqueWhatsapp, type OrigemWhatsapp } from '../lib/tracking';
 
 export const WHATSAPP_NUMBER = '5511978651383';
 
@@ -14,10 +14,15 @@ export const WHATSAPP_ICON_SVG = `
   </svg>
 `;
 
+/**
+ * Liga o rastreamento a todo `a[data-whatsapp-source]` dentro do container.
+ * A origem vem do próprio atributo, então marcar o link no HTML da seção
+ * basta — nenhum componente fala com o dataLayer diretamente.
+ */
 export function attachWhatsAppTracking(root: ParentNode = document): void {
   root.querySelectorAll<HTMLAnchorElement>('a[data-whatsapp-source]').forEach((link) => {
     link.addEventListener('click', () => {
-      trackWhatsAppClick(link.dataset.whatsappSource ?? 'unknown');
+      trackCliqueWhatsapp(link.dataset.whatsappSource as OrigemWhatsapp);
     });
   });
 }

@@ -118,11 +118,11 @@ export function renderHero(): void {
   container.querySelectorAll<HTMLButtonElement>('[data-quick-situacao]').forEach((button) => {
     button.addEventListener('click', () => {
       const situacao = button.dataset.quickSituacao as SituacaoValue;
-      openTriagemModal({ situacao });
+      openTriagemModal({ origem: 'hero', situacao });
     });
   });
 
   container.querySelector('[data-start-triagem]')?.addEventListener('click', () => {
-    openTriagemModal();
+    openTriagemModal({ origem: 'hero' });
   });
 }

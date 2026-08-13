@@ -1,4 +1,4 @@
-import { trackCliqueLigacao } from '../lib/analytics';
+import { trackCliqueLigacao, type OrigemLigacao } from '../lib/tracking';
 
 export const PHONE_HREF = 'tel:+5511978651383';
 export const PHONE_DISPLAY = '(11) 97865-1383';
@@ -20,7 +20,7 @@ export function initTelTracking(): void {
     const link = target.closest<HTMLAnchorElement>('a[href^="tel:"]');
     if (!link) return;
 
-    trackCliqueLigacao(link.dataset.telSource ?? 'desconhecido');
+    trackCliqueLigacao(link.dataset.telSource as OrigemLigacao);
   });
 }
 

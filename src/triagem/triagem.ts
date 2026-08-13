@@ -1,5 +1,6 @@
 import { criarRespostasVazias, type SituacaoValue, type TriagemRespostas } from '../types/triagem';
 import {
+  AREA_INTERESSE_CODES,
   ETAPA_OPTIONS,
   SITUACAO_OPTIONS,
   URGENCIA_OPTIONS,
@@ -9,22 +10,15 @@ import {
 import { montarMensagemTriagem } from './whatsapp-message';
 import { buildWhatsAppLink } from '../components/whatsapp-button';
 import {
-  trackTriagemComplete,
+  trackCliqueWhatsapp,
   trackTriagemConcluida,
-  trackTriagemStart,
-  trackTriagemStepComplete,
-} from '../lib/analytics';
+  trackTriagemIniciada,
+  type OrigemTriagem,
+} from '../lib/tracking';
 
 const WHATSAPP_REDIRECT_DELAY_MS = 300;
 
 const TOTAL_STEPS = 4;
-
-const STEP_NAMES: Record<number, string> = {
-  1: 'situacao',
-  2: 'etapa',
-  3: 'urgencia',
-  4: 'contato',
-};
 
 let step = 1;
 let showConfirmation = false;
@@ -87,7 +81,16 @@ function ensureModal(): void {
   });
 }
 
-export function openTriagemModal(prefill?: { situacao: SituacaoValue }): void {
+/**
+ * `origem` é obrigatória para que todo botão que abre a triagem apareça no
+ * relatório de abandono (abertos × concluídos) com o ponto de partida certo.
+ * Concentrar o disparo aqui, em vez de em cada botão, garante que nenhum
+ * caminho de abertura fique sem evento.
+ */
+export function openTriagemModal(opcoes: {
+  origem: OrigemTriagem;
+  situacao?: SituacaoValue;
+}): void {
   ensureModal();
   if (!panel) return;
 
@@ -95,8 +98,8 @@ export function openTriagemModal(prefill?: { situacao: SituacaoValue }): void {
   showConfirmation = false;
   respostas = criarRespostasVazias();
 
-  if (prefill?.situacao) {
-    respostas.situacao = prefill.situacao;
+  if (opcoes.situacao) {
+    respostas.situacao = opcoes.situacao;
     step = 2;
   } else {
     step = 1;
@@ -116,7 +119,10 @@ export function openTriagemModal(prefill?: { situacao: SituacaoValue }): void {
     });
   });
 
-  trackTriagemStart();
+  trackTriagemIniciada(
+    opcoes.origem,
+    opcoes.situacao ? AREA_INTERESSE_CODES[opcoes.situacao] : undefined,
+  );
   render();
 }
 
@@ -206,7 +212,6 @@ function goBack(): void {
 }
 
 function advanceStep(stepIndex: number): void {
-  trackTriagemStepComplete(stepIndex, STEP_NAMES[stepIndex] ?? String(stepIndex));
   step = stepIndex + 1;
   render();
 }
@@ -279,7 +284,6 @@ function renderStepContato(): void {
     // aqui (ex.: fetch a uma função serverless). Deve ser best-effort e nunca
     // bloquear o fluxo de confirmação/WhatsApp abaixo.
 
-    trackTriagemStepComplete(4, STEP_NAMES[4]);
     showConfirmation = true;
     render();
   });
@@ -358,12 +362,13 @@ function renderConfirmacao(): void {
     // TODO(lead-capture): esse é o ponto de confirmação final do usuário —
     // alternativa ao envio no passo de contato, caso prefira registrar o
     // lead somente após a confirmação explícita.
-    const areaInteresseLabel = labelFor(SITUACAO_OPTIONS, respostas.situacao);
-    const urgenciaLabel = labelFor(URGENCIA_OPTIONS, respostas.urgencia);
     const tracking = getTriagemTrackingData(respostas.situacao, respostas.urgencia);
 
-    trackTriagemComplete(areaInteresseLabel, urgenciaLabel);
+    // A ordem importa: trackTriagemConcluida grava a flag `triagem_ok`, que é
+    // justamente o que faz o clique_whatsapp abaixo ser suprimido — este
+    // clique já foi contabilizado como a conversão da triagem.
     trackTriagemConcluida(tracking.areaInteresse, tracking.urgenciaCode, tracking.valorLead);
+    trackCliqueWhatsapp('pos_triagem');
 
     const href = (event.currentTarget as HTMLAnchorElement).href;
     window.setTimeout(() => {
