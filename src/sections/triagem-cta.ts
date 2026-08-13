@@ -25,7 +25,7 @@ export function renderTriagemCta(): void {
           href="${buildWhatsAppLink(CTA_MESSAGE)}"
           target="_blank"
           rel="noopener noreferrer"
-          data-whatsapp-source="triagem_cta"
+          data-whatsapp-source="cta_final"
           class="inline-flex items-center justify-center gap-2 rounded bg-bronze-500 px-6 py-3.5 text-sm font-semibold text-graphite-950 shadow-lg shadow-black/30 transition duration-200 hover:scale-[1.02] hover:bg-bronze-400"
         >
           ${WHATSAPP_ICON_SVG}
@@ -56,6 +56,6 @@ export function renderTriagemCta(): void {
 
   attachWhatsAppTracking(container);
   container.querySelector('[data-open-triagem]')?.addEventListener('click', () => {
-    openTriagemModal();
+    openTriagemModal({ origem: 'cta_final' });
   });
 }

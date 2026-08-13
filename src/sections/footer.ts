@@ -29,7 +29,7 @@ export function renderFooter(): void {
                     href="${buildWhatsAppLink(FOOTER_MESSAGE)}"
                     target="_blank"
                     rel="noopener noreferrer"
-                    data-whatsapp-source="footer"
+                    data-whatsapp-source="rodape"
                     class="hover:text-bronze-300"
                   >
                     ${PHONE_DISPLAY}
