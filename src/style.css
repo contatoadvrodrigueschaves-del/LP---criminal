@@ -17,6 +17,17 @@
   --color-bronze-500: #b08d57;
   --color-bronze-600: #8a6d40;
   --color-bronze-700: #6b5330;
+
+  /*
+   * Verde da identidade (amostrado do logo oficial: #95bc4c limão e #5b6f3a
+   * oliva). Reservado para os CTAs de WhatsApp — dá o reconhecimento imediato
+   * do canal sem recorrer ao verde neon do app, que destoaria do tom sóbrio.
+   */
+  --color-verde-300: #b8d67f;
+  --color-verde-400: #a5c964;
+  --color-verde-500: #95bc4c;
+  --color-verde-600: #7a9c3c;
+  --color-verde-700: #5b6f3a;
 }
 
 @layer base {

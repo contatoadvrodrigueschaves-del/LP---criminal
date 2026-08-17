@@ -2,7 +2,6 @@ import { mount } from '../lib/dom';
 import { attachWhatsAppTracking, buildWhatsAppLink } from '../components/whatsapp-button';
 import { PHONE_DISPLAY, PHONE_HREF } from '../components/phone-link';
 
-const FOOTER_MESSAGE = 'Olá, gostaria de falar com o escritório.';
 
 export function renderFooter(): void {
   const container = mount(
@@ -26,7 +25,7 @@ export function renderFooter(): void {
                 <dt class="text-stone-500">WhatsApp:</dt>
                 <dd>
                   <a
-                    href="${buildWhatsAppLink(FOOTER_MESSAGE)}"
+                    href="${buildWhatsAppLink()}"
                     target="_blank"
                     rel="noopener noreferrer"
                     data-whatsapp-source="rodape"

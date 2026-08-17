@@ -1,7 +1,6 @@
 import { mount } from '../lib/dom';
 import { attachWhatsAppTracking, buildWhatsAppLink } from '../components/whatsapp-button';
 
-const HEADER_MESSAGE = 'Olá, gostaria de falar com o escritório.';
 
 export function renderHeader(): void {
   const container = mount(
@@ -14,11 +13,11 @@ export function renderHeader(): void {
           <span class="font-serif text-base text-stone-50">Rodrigues Chaves <span class="text-bronze-400">Advocacia</span></span>
         </span>
         <a
-          href="${buildWhatsAppLink(HEADER_MESSAGE)}"
+          href="${buildWhatsAppLink()}"
           target="_blank"
           rel="noopener noreferrer"
           data-whatsapp-source="header"
-          class="hidden items-center gap-2 rounded border border-bronze-500 px-4 py-2 text-sm font-medium text-bronze-300 transition hover:bg-graphite-800 sm:inline-flex"
+          class="hidden items-center gap-2 rounded border border-verde-500 px-4 py-2 text-sm font-medium text-verde-300 transition hover:bg-graphite-800 sm:inline-flex"
         >
           Falar pelo WhatsApp
         </a>
