@@ -5,8 +5,6 @@ import { openTriagemModal } from '../triagem/triagem';
 import { SITUACAO_OPTIONS } from '../triagem/steps';
 import type { SituacaoValue } from '../types/triagem';
 
-const HERO_MESSAGE =
-  'Olá, gostaria de falar sobre um caso urgente (prisão em flagrante, busca e apreensão ou bloqueio de bens).';
 
 export function renderHero(): void {
   const container = mount(
@@ -57,11 +55,11 @@ export function renderHero(): void {
         <div data-reveal style="--reveal-delay: 200ms" class="flex flex-col gap-3">
           <div class="flex flex-col gap-3 sm:flex-row">
             <a
-              href="${buildWhatsAppLink(HERO_MESSAGE)}"
+              href="${buildWhatsAppLink()}"
               target="_blank"
               rel="noopener noreferrer"
               data-whatsapp-source="hero"
-              class="inline-flex items-center justify-center gap-2 rounded bg-bronze-500 px-6 py-3.5 text-sm font-semibold text-graphite-950 shadow-lg shadow-black/30 transition duration-200 hover:scale-[1.02] hover:bg-bronze-400"
+              class="inline-flex items-center justify-center gap-2 rounded bg-verde-500 px-6 py-3.5 text-sm font-semibold text-graphite-950 shadow-lg shadow-black/30 transition duration-200 hover:scale-[1.02] hover:bg-verde-400"
             >
               ${WHATSAPP_ICON_SVG}
               Falar pelo WhatsApp
@@ -71,7 +69,7 @@ export function renderHero(): void {
               data-start-triagem
               class="inline-flex items-center justify-center gap-2 rounded border border-bronze-500 px-6 py-3.5 text-sm font-semibold text-bronze-300 transition duration-200 hover:scale-[1.02] hover:bg-graphite-800"
             >
-              Iniciar triagem
+              Iniciar análise
             </button>
           </div>
 

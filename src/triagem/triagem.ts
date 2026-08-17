@@ -47,11 +47,11 @@ function ensureModal(): void {
         class="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-t-lg border border-graphite-700 bg-graphite-900 shadow-2xl sm:rounded-lg"
       >
         <div class="flex items-center justify-between border-b border-graphite-700 px-6 py-4">
-          <p id="triagem-title" class="font-serif text-lg text-stone-50">Triagem inicial</p>
+          <p id="triagem-title" class="font-serif text-lg text-stone-50">Análise inicial</p>
           <button
             type="button"
             data-triagem-close
-            aria-label="Fechar triagem"
+            aria-label="Fechar análise"
             class="rounded p-1 text-stone-400 hover:text-bronze-300"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">

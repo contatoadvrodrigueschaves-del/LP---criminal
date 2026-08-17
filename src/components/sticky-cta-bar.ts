@@ -1,8 +1,6 @@
 import { attachWhatsAppTracking, buildWhatsAppLink, WHATSAPP_ICON_SVG } from './whatsapp-button';
 import { PHONE_HREF, PHONE_ICON_SVG } from './phone-link';
 
-const BAR_MESSAGE =
-  'Olá, gostaria de falar sobre minha situação com o escritório Rodrigues Chaves Advocacia.';
 
 /**
  * Barra fixa de contato no rodapé da viewport, só no mobile (< 768px).
@@ -35,11 +33,11 @@ export function mountStickyCtaBar(): void {
           Ligar agora
         </a>
         <a
-          href="${buildWhatsAppLink(BAR_MESSAGE)}"
+          href="${buildWhatsAppLink()}"
           target="_blank"
           rel="noopener noreferrer"
           data-whatsapp-source="barra_fixa"
-          class="inline-flex items-center justify-center gap-2 rounded border border-bronze-500 px-4 py-3 text-sm font-semibold text-bronze-300 transition duration-200 active:scale-[0.98]"
+          class="inline-flex items-center justify-center gap-2 rounded bg-verde-500 px-4 py-3 text-sm font-semibold text-graphite-950 transition duration-200 active:scale-[0.98]"
         >
           ${WHATSAPP_ICON_SVG}
           WhatsApp
