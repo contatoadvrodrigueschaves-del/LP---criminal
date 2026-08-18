@@ -36,7 +36,7 @@ export function renderHero(): void {
         </div>
 
         <h1 data-reveal style="--reveal-delay: 80ms" class="text-balance max-w-3xl text-[1.75rem] font-medium leading-[1.15] text-stone-50 md:text-5xl md:leading-tight">
-          Quando a acusação envolve provas digitais, a defesa precisa analisar cada detalhe.
+          Busca e apreensão, operação policial ou prisão em flagrante. Orientação jurídica desde o início da investigação.
         </h1>
 
         <p data-reveal style="--reveal-delay: 140ms" class="text-balance text-base leading-relaxed text-stone-300 md:hidden">

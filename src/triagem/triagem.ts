@@ -234,12 +234,11 @@ function renderStepContato(): void {
         />
       </div>
       <div>
-        <label for="triagem-telefone" class="mb-1 block text-sm text-stone-300">Telefone / WhatsApp *</label>
+        <label for="triagem-telefone" class="mb-1 block text-sm text-stone-300">Telefone / WhatsApp (opcional)</label>
         <input
           id="triagem-telefone"
           name="telefone"
           type="tel"
-          required
           value="${respostas.telefone}"
           placeholder="(11) 90000-0000"
           class="w-full rounded border border-graphite-700 bg-graphite-950 px-3 py-2.5 text-sm text-stone-100 outline-none focus:border-bronze-500"
@@ -278,7 +277,7 @@ function renderStepContato(): void {
     respostas.telefone = String(data.get('telefone') ?? '').trim();
     respostas.email = String(data.get('email') ?? '').trim();
 
-    if (!respostas.nome || !respostas.telefone) return;
+    if (!respostas.nome) return;
 
     // TODO(lead-capture): enviar `respostas` para um endpoint de CRM/e-mail
     // aqui (ex.: fetch a uma função serverless). Deve ser best-effort e nunca
@@ -315,10 +314,14 @@ function renderConfirmacao(): void {
         <dt class="text-stone-500">Nome</dt>
         <dd class="text-right text-stone-200">${respostas.nome}</dd>
       </div>
-      <div class="flex justify-between gap-4 border-b border-graphite-800 pb-2">
-        <dt class="text-stone-500">Telefone</dt>
-        <dd class="text-right text-stone-200">${respostas.telefone}</dd>
-      </div>
+      ${
+        respostas.telefone
+          ? `<div class="flex justify-between gap-4 border-b border-graphite-800 pb-2">
+              <dt class="text-stone-500">Telefone</dt>
+              <dd class="text-right text-stone-200">${respostas.telefone}</dd>
+            </div>`
+          : ''
+      }
       ${
         respostas.email
           ? `<div class="flex justify-between gap-4 border-b border-graphite-800 pb-2">
