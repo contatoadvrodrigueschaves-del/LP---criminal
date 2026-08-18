@@ -36,6 +36,10 @@ export function renderFaq(): void {
     <div class="relative overflow-hidden border-t border-graphite-700 bg-graphite-900">
       <img
         src="/logo-watermark.png"
+        loading="lazy"
+        decoding="async"
+        width="544"
+        height="544"
         alt=""
         aria-hidden="true"
         class="pointer-events-none absolute -right-24 top-1/2 h-[26rem] w-[26rem] -translate-y-1/2 select-none opacity-[0.06] md:h-[34rem] md:w-[34rem]"
