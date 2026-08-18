@@ -22,9 +22,10 @@ export type OrigemWhatsapp =
   | 'barra_fixa'
   | 'cta_final'
   | 'rodape'
+  | 'urgencia'
   | 'pos_triagem';
 
-export type OrigemLigacao = 'header' | 'hero' | 'barra_fixa' | 'cta_final' | 'rodape';
+export type OrigemLigacao = 'header' | 'hero' | 'barra_fixa' | 'cta_final' | 'rodape' | 'urgencia';
 
 export type OrigemTriagem = 'hero' | 'cta_final';
 

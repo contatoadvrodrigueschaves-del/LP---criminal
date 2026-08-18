@@ -17,9 +17,9 @@ import { initHashScroll } from './lib/hash-scroll';
 
 renderHeader();
 renderHero();
+renderAtuacao();
 renderSituacoes();
 renderUrgencia();
-renderAtuacao();
 renderDiferencial();
 renderAreas();
 renderFaq();
