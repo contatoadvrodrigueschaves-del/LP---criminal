@@ -42,6 +42,10 @@ export function renderAreas(): void {
     <div class="relative overflow-hidden">
       <img
         src="/logo-watermark.png"
+        loading="lazy"
+        decoding="async"
+        width="544"
+        height="544"
         alt=""
         aria-hidden="true"
         class="pointer-events-none absolute -left-32 bottom-0 h-[24rem] w-[24rem] select-none opacity-[0.05] md:h-[30rem] md:w-[30rem]"
