@@ -1,9 +1,20 @@
-import { criarRespostasVazias, type SituacaoValue, type TriagemRespostas } from '../types/triagem';
 import {
+  LIMITE_RELATO,
+  criarRespostasVazias,
+  type ApreensaoValue,
+  type LaudoValue,
+  type SituacaoValue,
+  type TriagemRespostas,
+} from '../types/triagem';
+import {
+  APREENSAO_EXCLUSIVAS,
+  APREENSAO_OPTIONS,
   AREA_INTERESSE_CODES,
   ETAPA_OPTIONS,
+  LAUDO_OPTIONS,
   SITUACAO_OPTIONS,
   URGENCIA_OPTIONS,
+  getQualificacaoTracking,
   getTriagemTrackingData,
   labelFor,
 } from './steps';
@@ -18,7 +29,7 @@ import {
 
 const WHATSAPP_REDIRECT_DELAY_MS = 300;
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 5;
 
 let step = 1;
 let showConfirmation = false;
@@ -28,6 +39,20 @@ let lastFocusedElement: HTMLElement | null = null;
 let root: HTMLElement | null = null;
 let panel: HTMLElement | null = null;
 let content: HTMLElement | null = null;
+
+/**
+ * Tudo que a pessoa digita passa por aqui antes de virar innerHTML.
+ * Sem isso, um nome com aspas já quebra o atributo `value` e o campo de
+ * relato — 500 caracteres livres — vira injeção de HTML na tela de resumo.
+ */
+function escaparHtml(texto: string): string {
+  return texto
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
 function ensureModal(): void {
   if (root) return;
@@ -214,6 +239,146 @@ function advanceStep(stepIndex: number): void {
   render();
 }
 
+/**
+ * Etapa 4 — o material do caso.
+ *
+ * Tudo aqui é opcional de propósito: os leads mais urgentes (flagrante,
+ * busca em andamento) normalmente ainda não têm número de processo, e exigir
+ * o campo barraria justamente quem mais precisa. As duas primeiras perguntas
+ * são o que liga o caso ao serviço do escritório — o que foi apreendido
+ * define se há prova digital a analisar, e o laudo define se cabe assistente
+ * técnico.
+ */
+function renderStepCaso(): void {
+  if (!content) return;
+
+  const chips = (
+    opcoes: { value: string; label: string }[],
+    selecionados: string[],
+    attr: string,
+  ): string =>
+    opcoes
+      .map(
+        (o) => `<button type="button" ${attr}="${o.value}" class="modal-chip ${
+          selecionados.includes(o.value) ? 'selecionada' : ''
+        }" aria-pressed="${selecionados.includes(o.value)}">${o.label}</button>`,
+      )
+      .join('');
+
+  const usados = respostas.relato.length;
+
+  content.innerHTML = `
+    <h4 class="modal-pergunta">O que existe de material no caso?</h4>
+    <p class="modal-ajuda">Todos os campos desta etapa são opcionais. Responda o que souber.</p>
+
+    <form data-triagem-form class="modal-form">
+      <fieldset class="modal-grupo">
+        <legend>Foi apreendido algum aparelho ou material?</legend>
+        <div class="modal-chips" data-apreensao>${chips(
+          APREENSAO_OPTIONS,
+          respostas.apreensao,
+          'data-apreensao-value',
+        )}</div>
+      </fieldset>
+
+      <fieldset class="modal-grupo">
+        <legend>A acusação já apresentou laudo pericial?</legend>
+        <div class="modal-chips" data-laudo>${chips(
+          LAUDO_OPTIONS,
+          respostas.laudo ? [respostas.laudo] : [],
+          'data-laudo-value',
+        )}</div>
+      </fieldset>
+
+      <div class="modal-campo">
+        <label for="triagem-processo">Número do processo ou inquérito</label>
+        <input
+          id="triagem-processo"
+          name="numeroProcesso"
+          type="text"
+          value="${escaparHtml(respostas.numeroProcesso)}"
+          placeholder="Se ainda não houver, deixe em branco"
+        />
+      </div>
+
+      <div class="modal-campo">
+        <label for="triagem-relato">Conte o que aconteceu</label>
+        <textarea
+          id="triagem-relato"
+          name="relato"
+          rows="5"
+          maxlength="${LIMITE_RELATO}"
+          data-relato
+          placeholder="Em poucas linhas: o que aconteceu, quando, e o que você já recebeu ou assinou."
+        >${escaparHtml(respostas.relato)}</textarea>
+        <p class="modal-contador" data-contador aria-live="polite">${usados} / ${LIMITE_RELATO}</p>
+      </div>
+
+      <div class="modal-acoes">
+        <button type="button" data-triagem-back class="modal-voltar">← Voltar</button>
+        <button type="submit" class="btn-modal-primario">Continuar</button>
+      </div>
+    </form>
+  `;
+
+  const form = content.querySelector<HTMLFormElement>('[data-triagem-form]');
+
+  // Guarda o que já foi digitado antes de qualquer re-render disparado pelos
+  // chips, senão o texto do relato se perde ao marcar uma opção.
+  const capturar = (): void => {
+    if (!form) return;
+    const data = new FormData(form);
+    respostas.numeroProcesso = String(data.get('numeroProcesso') ?? '').trim();
+    respostas.relato = String(data.get('relato') ?? '').slice(0, LIMITE_RELATO);
+  };
+
+  content.querySelectorAll<HTMLButtonElement>('[data-apreensao-value]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      capturar();
+      const valor = btn.dataset.apreensaoValue as ApreensaoValue;
+      const jaTem = respostas.apreensao.includes(valor);
+
+      if (APREENSAO_EXCLUSIVAS.includes(valor)) {
+        respostas.apreensao = jaTem ? [] : [valor];
+      } else {
+        const semExclusivas = respostas.apreensao.filter(
+          (v) => !APREENSAO_EXCLUSIVAS.includes(v),
+        );
+        respostas.apreensao = jaTem
+          ? semExclusivas.filter((v) => v !== valor)
+          : [...semExclusivas, valor];
+      }
+      render();
+    });
+  });
+
+  content.querySelectorAll<HTMLButtonElement>('[data-laudo-value]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      capturar();
+      const valor = btn.dataset.laudoValue as LaudoValue;
+      respostas.laudo = respostas.laudo === valor ? null : valor;
+      render();
+    });
+  });
+
+  const relato = content.querySelector<HTMLTextAreaElement>('[data-relato]');
+  const contador = content.querySelector<HTMLElement>('[data-contador]');
+  relato?.addEventListener('input', () => {
+    if (contador) contador.textContent = `${relato.value.length} / ${LIMITE_RELATO}`;
+  });
+
+  content.querySelector('[data-triagem-back]')?.addEventListener('click', () => {
+    capturar();
+    goBack();
+  });
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    capturar();
+    advanceStep(4);
+  });
+}
+
 function renderStepContato(): void {
   if (!content) return;
 
@@ -227,7 +392,7 @@ function renderStepContato(): void {
           name="nome"
           type="text"
           required
-          value="${respostas.nome}"
+          value="${escaparHtml(respostas.nome)}"
         />
       </div>
       <div class="modal-campo">
@@ -236,7 +401,7 @@ function renderStepContato(): void {
           id="triagem-telefone"
           name="telefone"
           type="tel"
-          value="${respostas.telefone}"
+          value="${escaparHtml(respostas.telefone)}"
           placeholder="(11) 90000-0000"
         />
       </div>
@@ -246,9 +411,41 @@ function renderStepContato(): void {
           id="triagem-email"
           name="email"
           type="email"
-          value="${respostas.email}"
+          value="${escaparHtml(respostas.email)}"
         />
       </div>
+
+      <label class="modal-consent">
+        <input type="checkbox" name="consentimento" data-consent required ${
+          respostas.consentimento ? 'checked' : ''
+        } />
+        <span>
+          Concordo em enviar estas informações ao escritório pelo WhatsApp e li como
+          meus dados são tratados.
+        </span>
+      </label>
+
+      <details class="modal-privacidade">
+        <summary>Como seus dados são tratados</summary>
+        <p>
+          <strong>Controlador:</strong> Larissa Rodrigues Chaves — OAB/SP 527.355,
+          Av. Cidade Jardim, 377, Itaim Bibi, São Paulo/SP.
+        </p>
+        <p>
+          Este site não armazena o que você preencheu. As respostas servem apenas para
+          montar a mensagem que você mesmo envia pelo WhatsApp — os dados ficam na
+          própria conversa, protegida por sigilo profissional.
+        </p>
+        <p>
+          As ferramentas de medição do site recebem somente o tipo de situação, a
+          urgência e as respostas técnicas sobre o caso. Nome, telefone, e-mail, número
+          de processo e o seu relato não são enviados a elas.
+        </p>
+        <p>
+          Para dúvidas ou pedidos sobre seus dados (art. 18 da LGPD), escreva para
+          <a href="mailto:contato@rodrigueschavesadv.com.br">contato@rodrigueschavesadv.com.br</a>.
+        </p>
+      </details>
 
       <div class="modal-acoes">
         <button type="button" data-triagem-back class="modal-voltar">← Voltar</button>
@@ -271,8 +468,11 @@ function renderStepContato(): void {
     respostas.nome = String(data.get('nome') ?? '').trim();
     respostas.telefone = String(data.get('telefone') ?? '').trim();
     respostas.email = String(data.get('email') ?? '').trim();
+    respostas.consentimento = data.get('consentimento') === 'on';
 
-    if (!respostas.nome) return;
+    // O `required` do checkbox já barra o envio no navegador; a checagem aqui
+    // é a que vale, porque o resumo é montado por este código e não pelo form.
+    if (!respostas.nome || !respostas.consentimento) return;
 
     // TODO(lead-capture): enviar `respostas` para um endpoint de CRM/e-mail
     // aqui (ex.: fetch a uma função serverless). Deve ser best-effort e nunca
@@ -305,15 +505,49 @@ function renderConfirmacao(): void {
         <dt class="modal-resumo-k">Urgência</dt>
         <dd class="modal-resumo-v">${urgenciaLabel}</dd>
       </div>
+      ${
+        respostas.apreensao.length > 0
+          ? `<div class="modal-resumo-linha">
+              <dt class="modal-resumo-k">Apreendido</dt>
+              <dd class="modal-resumo-v">${respostas.apreensao
+                .map((valor) => labelFor(APREENSAO_OPTIONS, valor))
+                .join(', ')}</dd>
+            </div>`
+          : ''
+      }
+      ${
+        respostas.laudo
+          ? `<div class="modal-resumo-linha">
+              <dt class="modal-resumo-k">Laudo pericial</dt>
+              <dd class="modal-resumo-v">${labelFor(LAUDO_OPTIONS, respostas.laudo)}</dd>
+            </div>`
+          : ''
+      }
+      ${
+        respostas.numeroProcesso
+          ? `<div class="modal-resumo-linha">
+              <dt class="modal-resumo-k">Processo/inquérito</dt>
+              <dd class="modal-resumo-v">${escaparHtml(respostas.numeroProcesso)}</dd>
+            </div>`
+          : ''
+      }
+      ${
+        respostas.relato
+          ? `<div class="modal-resumo-linha">
+              <dt class="modal-resumo-k">Relato</dt>
+              <dd class="modal-resumo-v modal-resumo-relato">${escaparHtml(respostas.relato)}</dd>
+            </div>`
+          : ''
+      }
       <div class="modal-resumo-linha">
         <dt class="modal-resumo-k">Nome</dt>
-        <dd class="modal-resumo-v">${respostas.nome}</dd>
+        <dd class="modal-resumo-v">${escaparHtml(respostas.nome)}</dd>
       </div>
       ${
         respostas.telefone
           ? `<div class="modal-resumo-linha">
               <dt class="modal-resumo-k">Telefone</dt>
-              <dd class="modal-resumo-v">${respostas.telefone}</dd>
+              <dd class="modal-resumo-v">${escaparHtml(respostas.telefone)}</dd>
             </div>`
           : ''
       }
@@ -321,7 +555,7 @@ function renderConfirmacao(): void {
         respostas.email
           ? `<div class="modal-resumo-linha">
               <dt class="modal-resumo-k">E-mail</dt>
-              <dd class="modal-resumo-v">${respostas.email}</dd>
+              <dd class="modal-resumo-v">${escaparHtml(respostas.email)}</dd>
             </div>`
           : ''
       }
@@ -365,7 +599,14 @@ function renderConfirmacao(): void {
     // A ordem importa: trackTriagemConcluida grava a flag `triagem_ok`, que é
     // justamente o que faz o clique_whatsapp abaixo ser suprimido — este
     // clique já foi contabilizado como a conversão da triagem.
-    trackTriagemConcluida(tracking.areaInteresse, tracking.urgenciaCode, tracking.valorLead);
+    const qualificacao = getQualificacaoTracking(respostas.apreensao, respostas.laudo);
+
+    trackTriagemConcluida(
+      tracking.areaInteresse,
+      tracking.urgenciaCode,
+      tracking.valorLead,
+      qualificacao,
+    );
     trackCliqueWhatsapp('pos_triagem');
 
     const href = (event.currentTarget as HTMLAnchorElement).href;
@@ -398,6 +639,8 @@ function render(): void {
       respostas.urgencia = value;
       advanceStep(3);
     });
+  } else if (step === 4) {
+    renderStepCaso();
   } else {
     renderStepContato();
   }
