@@ -5,6 +5,7 @@ import { reconciliarLinksWhatsApp, attachWhatsAppTracking } from './components/w
 import { openTriagemModal } from './triagem/triagem';
 import { initScrollReveal } from './lib/scroll-reveal';
 import { initParallaxHero } from './lib/parallax-hero';
+import { initHeaderScroll } from './lib/header-scroll';
 import { initHashScroll } from './lib/hash-scroll';
 
 /**
@@ -29,4 +30,5 @@ document.querySelector('[data-open-triagem]')?.addEventListener('click', () => {
 
 initScrollReveal();
 initParallaxHero();
+initHeaderScroll();
 initHashScroll();

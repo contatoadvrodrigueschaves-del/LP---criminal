@@ -471,3 +471,133 @@ body.analise-aberta { overflow: hidden; }
   .hero .btn-secondary-dark { margin-top: 12px; width: 100%; }
   .hero .btn-primary { width: 100%; }
 }
+
+/* ============================================================
+   Sistema de movimento
+   ------------------------------------------------------------
+   Personalidade "Corporate": curva decisiva, sem overshoot. Num site
+   de defesa criminal quem chega está em pânico — o movimento precisa
+   transmitir firmeza, não entusiasmo. Nada quica.
+   Material de referência: papel (as pastas), amplitude curta.
+   ============================================================ */
+:root {
+  --mov-rapido: 180ms;
+  --mov-padrao: 320ms;
+  --mov-lento: 520ms;
+  --mov-curva: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* --- Pastas de dossiê: a peça sai da gaveta --- */
+.dossie-body,
+.dossie-folha {
+  transition: transform var(--mov-lento) var(--mov-curva);
+}
+.dossie-body { transform: translateY(10px); }
+.dossie-folha { transform: translateY(6px); }
+
+#situacoes.is-visible .dossie-body,
+#situacoes.is-visible .dossie-folha { transform: translateY(0); }
+
+/* A folha de papel é mais leve, então chega depois do corpo da pasta —
+   follow-through. O escalonamento entre as 4 pastas fica em 70ms, dentro
+   do orçamento de 500ms no total. */
+#situacoes.is-visible .dossie:nth-child(1) .dossie-body { transition-delay: 0ms; }
+#situacoes.is-visible .dossie:nth-child(2) .dossie-body { transition-delay: 70ms; }
+#situacoes.is-visible .dossie:nth-child(3) .dossie-body { transition-delay: 140ms; }
+#situacoes.is-visible .dossie:nth-child(4) .dossie-body { transition-delay: 210ms; }
+#situacoes.is-visible .dossie:nth-child(1) .dossie-folha { transition-delay: 90ms; }
+#situacoes.is-visible .dossie:nth-child(2) .dossie-folha { transition-delay: 160ms; }
+#situacoes.is-visible .dossie:nth-child(3) .dossie-folha { transition-delay: 230ms; }
+#situacoes.is-visible .dossie:nth-child(4) .dossie-folha { transition-delay: 300ms; }
+
+/* No hover a pasta levanta e o papel escapa um pouco mais — sugere que há
+   algo dentro para ser lido. */
+.dossie { transition: transform var(--mov-padrao) var(--mov-curva); }
+.dossie-body { box-shadow: 0 0 0 rgba(43, 26, 16, 0); transition: transform var(--mov-lento) var(--mov-curva), box-shadow var(--mov-padrao) var(--mov-curva); }
+.dossie:hover { transform: translateY(-4px); }
+.dossie:hover .dossie-body { box-shadow: 0 10px 24px rgba(43, 26, 16, 0.13); }
+.dossie:hover .dossie-folha { transform: translateY(-4px); }
+
+/* --- Ilustração: o celular é desenhado, a lupa passa por cima --- */
+.evidence-graphic [data-traco] {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 500ms var(--mov-curva);
+  transition-delay: var(--traco-atraso, 0ms);
+}
+#provas-digitais.is-visible .evidence-graphic [data-traco] { stroke-dashoffset: 0; }
+
+/* --- Lista numerada I–IV: o algarismo entra à frente do texto --- */
+.id-item { opacity: 0; transform: translateY(12px); transition: opacity var(--mov-padrao) var(--mov-curva), transform var(--mov-padrao) var(--mov-curva); }
+.id-num { display: inline-block; opacity: 0; transform: translateX(-6px); transition: opacity var(--mov-rapido) var(--mov-curva), transform var(--mov-rapido) var(--mov-curva); }
+#investigacao-defensiva.is-visible .id-item { opacity: 1; transform: translateY(0); }
+#investigacao-defensiva.is-visible .id-num { opacity: 1; transform: translateX(0); }
+#investigacao-defensiva.is-visible .id-item:nth-child(1) { transition-delay: 0ms; }
+#investigacao-defensiva.is-visible .id-item:nth-child(2) { transition-delay: 80ms; }
+#investigacao-defensiva.is-visible .id-item:nth-child(3) { transition-delay: 160ms; }
+#investigacao-defensiva.is-visible .id-item:nth-child(4) { transition-delay: 240ms; }
+
+/* --- Lista de princípios: cascata curta, como itens sendo conferidos --- */
+.split-list li { opacity: 0; transform: translateY(8px); transition: opacity var(--mov-padrao) var(--mov-curva), transform var(--mov-padrao) var(--mov-curva); }
+#provas-digitais.is-visible .split-list li { opacity: 1; transform: translateY(0); }
+#provas-digitais.is-visible .split-list li:nth-child(1) { transition-delay: 0ms; }
+#provas-digitais.is-visible .split-list li:nth-child(2) { transition-delay: 40ms; }
+#provas-digitais.is-visible .split-list li:nth-child(3) { transition-delay: 80ms; }
+#provas-digitais.is-visible .split-list li:nth-child(4) { transition-delay: 120ms; }
+#provas-digitais.is-visible .split-list li:nth-child(5) { transition-delay: 160ms; }
+
+/* --- Cards de dor/caminho --- */
+.pain-card { opacity: 0; transform: translateY(14px); transition: opacity var(--mov-padrao) var(--mov-curva), transform var(--mov-padrao) var(--mov-curva), box-shadow var(--mov-padrao) var(--mov-curva); }
+#areas.is-visible .pain-card { opacity: 1; transform: translateY(0); }
+#areas.is-visible .pain-card:nth-child(1) { transition-delay: 0ms; }
+#areas.is-visible .pain-card:nth-child(2) { transition-delay: 70ms; }
+#areas.is-visible .pain-card:nth-child(3) { transition-delay: 140ms; }
+#areas.is-visible .pain-card:nth-child(4) { transition-delay: 210ms; }
+.pain-card:hover { box-shadow: 0 8px 22px rgba(28, 28, 26, 0.07); }
+
+/* --- FAQ: cascata mínima --- */
+.faq-item { opacity: 0; transform: translateY(10px); transition: opacity var(--mov-padrao) var(--mov-curva), transform var(--mov-padrao) var(--mov-curva); }
+#faq.is-visible .faq-item { opacity: 1; transform: translateY(0); }
+#faq.is-visible .faq-item:nth-child(1) { transition-delay: 0ms; }
+#faq.is-visible .faq-item:nth-child(2) { transition-delay: 60ms; }
+#faq.is-visible .faq-item:nth-child(3) { transition-delay: 120ms; }
+
+/* --- Camada ambiente: a impressão digital respira, quase imperceptível --- */
+@media (prefers-reduced-motion: no-preference) {
+  .fp-section, .fp-id, .fp-cite { animation: deriva 26s ease-in-out infinite; }
+}
+@keyframes deriva {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-5px, 4px); }
+}
+
+/* --- Cabeçalho fixo no desktop, depois do hero ---
+   No mobile a barra fixa já resolve o contato; aqui o problema é o
+   desktop, onde depois do hero não sobra nenhum CTA visível. */
+@media (min-width: 721px) {
+  .site-header {
+    position: fixed;
+    transition: background-color var(--mov-padrao) var(--mov-curva),
+                padding var(--mov-padrao) var(--mov-curva),
+                box-shadow var(--mov-padrao) var(--mov-curva);
+  }
+  .site-header.encolhido {
+    background: rgba(15, 14, 71, 0.97);
+    padding: 12px 20px;
+    box-shadow: 0 2px 18px rgba(15, 14, 71, 0.18);
+  }
+  .site-header.encolhido .logo-mark { width: 38px; height: 38px; }
+  .site-header .logo-mark { transition: width var(--mov-padrao) var(--mov-curva), height var(--mov-padrao) var(--mov-curva); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dossie-body, .dossie-folha, .id-item, .id-num,
+  .split-list li, .pain-card, .faq-item,
+  .evidence-graphic [data-traco] {
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+    transition: none !important;
+  }
+  .fp-section, .fp-id, .fp-cite { animation: none !important; }
+}
