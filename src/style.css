@@ -582,9 +582,12 @@ body.analise-aberta { overflow: hidden; }
                 box-shadow var(--mov-padrao) var(--mov-curva);
   }
   .site-header.encolhido {
-    background: rgba(15, 14, 71, 0.97);
+    /* Opaco de verdade: com 0.97 o texto do hero vazava atraves da barra. */
+    background: #0F0E47;
     padding: 12px 20px;
-    box-shadow: 0 2px 18px rgba(15, 14, 71, 0.18);
+    /* A hairline inferior faz a borda ler como "o conteudo passa por baixo",
+       em vez de texto cortado ao meio. Inset para nao mexer no layout. */
+    box-shadow: 0 2px 18px rgba(15, 14, 71, 0.18), inset 0 -1px 0 rgba(243, 232, 220, 0.14);
   }
   .site-header.encolhido .logo-mark { width: 38px; height: 38px; }
   .site-header .logo-mark { transition: width var(--mov-padrao) var(--mov-curva), height var(--mov-padrao) var(--mov-curva); }

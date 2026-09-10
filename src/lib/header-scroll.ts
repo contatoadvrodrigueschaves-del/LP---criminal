@@ -6,17 +6,24 @@
  * até o meio da página. O cabeçalho fixo resolve isso, e encolher ao rolar
  * evita que ele roube espaço da leitura.
  */
+/**
+ * O fundo entra cedo de proposito. O cabecalho e fixo e o conteudo do hero
+ * sobe por tras dele; se o fundo so aparecesse ao fim do hero, haveria uma
+ * janela em que os botoes passariam por cima do logo num cabecalho ainda
+ * transparente. Com a barra opaca desde o inicio da rolagem, o conteudo
+ * desliza atras dela.
+ */
+const LIMIAR_FUNDO = 90;
+
 export function initHeaderScroll(): void {
   const header = document.querySelector<HTMLElement>('.site-header');
-  const hero = document.querySelector<HTMLElement>('.hero');
-  if (!header || !hero) return;
+  if (!header) return;
 
   let agendado = false;
 
   const avaliar = (): void => {
     agendado = false;
-    const passouDoHero = window.scrollY > hero.offsetHeight - 90;
-    header.classList.toggle('encolhido', passouDoHero);
+    header.classList.toggle('encolhido', window.scrollY > LIMIAR_FUNDO);
   };
 
   window.addEventListener(
