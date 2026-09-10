@@ -19,15 +19,14 @@ declare global {
 export type OrigemWhatsapp =
   | 'header'
   | 'hero'
-  | 'barra_fixa'
-  | 'cta_final'
+  | 'situacoes'
   | 'rodape'
-  | 'urgencia'
+  | 'barra_fixa'
   | 'pos_triagem';
 
-export type OrigemLigacao = 'header' | 'hero' | 'barra_fixa' | 'cta_final' | 'rodape' | 'urgencia';
+export type OrigemLigacao = 'hero' | 'rodape' | 'barra_fixa';
 
-export type OrigemTriagem = 'hero' | 'cta_final';
+export type OrigemTriagem = 'hero' | 'provas_digitais';
 
 const TRIAGEM_OK_KEY = 'triagem_ok';
 

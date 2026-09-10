@@ -37,22 +37,22 @@ function ensureModal(): void {
   root.innerHTML = `
     <div
       data-triagem-overlay
-      class="fixed inset-0 z-[60] hidden items-end justify-center bg-black/70 p-0 sm:items-center sm:p-4"
+      class="modal-overlay"
     >
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="triagem-title"
         data-triagem-panel
-        class="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-t-lg border border-graphite-700 bg-graphite-900 shadow-2xl sm:rounded-lg"
+        class="modal-painel"
       >
-        <div class="flex items-center justify-between border-b border-graphite-700 px-6 py-4">
-          <p id="triagem-title" class="font-serif text-lg text-stone-50">Análise inicial</p>
+        <div class="modal-cabecalho">
+          <p id="triagem-title" class="modal-titulo">Análise inicial</p>
           <button
             type="button"
             data-triagem-close
             aria-label="Fechar análise"
-            class="rounded p-1 text-stone-400 hover:text-bronze-300"
+            class="modal-fechar"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" />
@@ -60,9 +60,9 @@ function ensureModal(): void {
           </button>
         </div>
 
-        <div data-triagem-progress class="px-6 pt-4"></div>
+        <div data-triagem-progress class="modal-progresso"></div>
 
-        <div data-triagem-content class="px-6 py-6"></div>
+        <div data-triagem-content class="modal-conteudo"></div>
       </div>
     </div>
   `;
@@ -75,7 +75,7 @@ function ensureModal(): void {
     if (event.target === panel) closeTriagemModal();
   });
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && panel && !panel.classList.contains('hidden')) {
+    if (event.key === 'Escape' && panel && panel.classList.contains('esta-visivel')) {
       closeTriagemModal();
     }
   });
@@ -105,17 +105,16 @@ export function openTriagemModal(opcoes: {
     step = 1;
   }
 
-  panel.classList.remove('hidden');
-  panel.classList.add('flex');
-  // `triagem-aberta` esconde a barra fixa de contato (ver style.css) para que
+  panel.classList.add('esta-visivel');
+  // `analise-aberta` trava o scroll e esconde a barra fixa de contato (ver style.css) para que
   // ela não fique sobre os controles do modal no mobile.
-  document.body.classList.add('overflow-hidden', 'triagem-aberta');
+  document.body.classList.add('analise-aberta');
 
   // dupla rAF garante que o navegador aplique o estado inicial (opacidade 0)
   // antes de adicionar a classe que dispara a transição de entrada.
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      panel?.classList.add('is-open');
+      panel?.classList.add('esta-aberto');
     });
   });
 
@@ -128,13 +127,12 @@ export function openTriagemModal(opcoes: {
 
 export function closeTriagemModal(): void {
   if (!panel) return;
-  panel.classList.remove('is-open');
-  document.body.classList.remove('overflow-hidden', 'triagem-aberta');
+  panel.classList.remove('esta-aberto');
+  document.body.classList.remove('analise-aberta');
   lastFocusedElement?.focus();
 
   window.setTimeout(() => {
-    panel?.classList.add('hidden');
-    panel?.classList.remove('flex');
+    panel?.classList.remove('esta-visivel');
   }, 250);
 }
 
@@ -146,14 +144,14 @@ function renderProgress(): void {
   const activeStep = showConfirmation ? TOTAL_STEPS : step;
   const segments = Array.from({ length: TOTAL_STEPS }, (_, i) => {
     const filled = i < activeStep;
-    return `<span class="h-1 flex-1 rounded-full ${filled ? 'bg-bronze-500' : 'bg-graphite-700'}"></span>`;
+    return `<span class="modal-progresso-passo ${filled ? 'preenchido' : ''}"></span>`;
   }).join('');
 
   progressEl.innerHTML = `
-    <div class="flex gap-1.5" role="progressbar" aria-valuenow="${activeStep}" aria-valuemin="1" aria-valuemax="${TOTAL_STEPS}">
+    <div class="modal-progresso-trilha" role="progressbar" aria-valuenow="${activeStep}" aria-valuemin="1" aria-valuemax="${TOTAL_STEPS}">
       ${segments}
     </div>
-    <p class="mt-2 text-xs text-stone-500">Etapa ${activeStep} de ${TOTAL_STEPS}</p>
+    <p class="modal-progresso-texto">Etapa ${activeStep} de ${TOTAL_STEPS}</p>
   `;
 }
 
@@ -162,7 +160,7 @@ function optionButton(label: string, selected: boolean): string {
     <button
       type="button"
       data-option-value="${label}"
-      class="w-full rounded border ${selected ? 'border-bronze-500 bg-graphite-800' : 'border-graphite-700 bg-graphite-900'} px-4 py-3 text-left text-sm text-stone-200 transition hover:border-bronze-500 hover:bg-graphite-800"
+      class="modal-opcao ${selected ? 'selecionada' : ''}"
     >
       ${label}
     </button>
@@ -178,11 +176,11 @@ function renderStepSelect<T extends string>(
   if (!content) return;
 
   content.innerHTML = `
-    <h4 class="text-base font-medium text-stone-50">${title}</h4>
-    <div class="mt-4 flex flex-col gap-2" data-options></div>
+    <h4 class="modal-pergunta">${title}</h4>
+    <div class="modal-opcoes" data-options></div>
     ${
       step > 1
-        ? '<button type="button" data-triagem-back class="mt-6 text-sm text-stone-400 hover:text-bronze-300">← Voltar</button>'
+        ? '<button type="button" data-triagem-back class="modal-voltar">← Voltar</button>'
         : ''
     }
   `;
@@ -220,46 +218,43 @@ function renderStepContato(): void {
   if (!content) return;
 
   content.innerHTML = `
-    <h4 class="text-base font-medium text-stone-50">Seus dados de contato</h4>
-    <form data-triagem-form class="mt-4 flex flex-col gap-4">
-      <div>
-        <label for="triagem-nome" class="mb-1 block text-sm text-stone-300">Nome *</label>
+    <h4 class="modal-pergunta">Seus dados de contato</h4>
+    <form data-triagem-form class="modal-form">
+      <div class="modal-campo">
+        <label for="triagem-nome">Nome *</label>
         <input
           id="triagem-nome"
           name="nome"
           type="text"
           required
           value="${respostas.nome}"
-          class="w-full rounded border border-graphite-700 bg-graphite-950 px-3 py-2.5 text-sm text-stone-100 outline-none focus:border-bronze-500"
         />
       </div>
-      <div>
-        <label for="triagem-telefone" class="mb-1 block text-sm text-stone-300">Telefone / WhatsApp (opcional)</label>
+      <div class="modal-campo">
+        <label for="triagem-telefone">Telefone / WhatsApp (opcional)</label>
         <input
           id="triagem-telefone"
           name="telefone"
           type="tel"
           value="${respostas.telefone}"
           placeholder="(11) 90000-0000"
-          class="w-full rounded border border-graphite-700 bg-graphite-950 px-3 py-2.5 text-sm text-stone-100 outline-none focus:border-bronze-500"
         />
       </div>
-      <div>
-        <label for="triagem-email" class="mb-1 block text-sm text-stone-300">E-mail (opcional)</label>
+      <div class="modal-campo">
+        <label for="triagem-email">E-mail (opcional)</label>
         <input
           id="triagem-email"
           name="email"
           type="email"
           value="${respostas.email}"
-          class="w-full rounded border border-graphite-700 bg-graphite-950 px-3 py-2.5 text-sm text-stone-100 outline-none focus:border-bronze-500"
         />
       </div>
 
-      <div class="mt-2 flex items-center justify-between">
-        <button type="button" data-triagem-back class="text-sm text-stone-400 hover:text-bronze-300">← Voltar</button>
+      <div class="modal-acoes">
+        <button type="button" data-triagem-back class="modal-voltar">← Voltar</button>
         <button
           type="submit"
-          class="rounded bg-bronze-500 px-5 py-2.5 text-sm font-semibold text-graphite-950 hover:bg-bronze-400"
+          class="btn-modal-primario"
         >
           Ver resumo
         </button>
@@ -296,49 +291,49 @@ function renderConfirmacao(): void {
   const urgenciaLabel = labelFor(URGENCIA_OPTIONS, respostas.urgencia);
 
   content.innerHTML = `
-    <h4 class="text-base font-medium text-stone-50">Confirme suas respostas</h4>
-    <dl class="mt-4 space-y-3 text-sm">
-      <div class="flex justify-between gap-4 border-b border-graphite-800 pb-2">
-        <dt class="text-stone-500">Situação</dt>
-        <dd class="text-right text-stone-200">${situacaoLabel}</dd>
+    <h4 class="modal-pergunta">Confirme suas respostas</h4>
+    <dl class="modal-resumo">
+      <div class="modal-resumo-linha">
+        <dt class="modal-resumo-k">Situação</dt>
+        <dd class="modal-resumo-v">${situacaoLabel}</dd>
       </div>
-      <div class="flex justify-between gap-4 border-b border-graphite-800 pb-2">
-        <dt class="text-stone-500">Etapa</dt>
-        <dd class="text-right text-stone-200">${etapaLabel}</dd>
+      <div class="modal-resumo-linha">
+        <dt class="modal-resumo-k">Etapa</dt>
+        <dd class="modal-resumo-v">${etapaLabel}</dd>
       </div>
-      <div class="flex justify-between gap-4 border-b border-graphite-800 pb-2">
-        <dt class="text-stone-500">Urgência</dt>
-        <dd class="text-right text-stone-200">${urgenciaLabel}</dd>
+      <div class="modal-resumo-linha">
+        <dt class="modal-resumo-k">Urgência</dt>
+        <dd class="modal-resumo-v">${urgenciaLabel}</dd>
       </div>
-      <div class="flex justify-between gap-4 border-b border-graphite-800 pb-2">
-        <dt class="text-stone-500">Nome</dt>
-        <dd class="text-right text-stone-200">${respostas.nome}</dd>
+      <div class="modal-resumo-linha">
+        <dt class="modal-resumo-k">Nome</dt>
+        <dd class="modal-resumo-v">${respostas.nome}</dd>
       </div>
       ${
         respostas.telefone
-          ? `<div class="flex justify-between gap-4 border-b border-graphite-800 pb-2">
-              <dt class="text-stone-500">Telefone</dt>
-              <dd class="text-right text-stone-200">${respostas.telefone}</dd>
+          ? `<div class="modal-resumo-linha">
+              <dt class="modal-resumo-k">Telefone</dt>
+              <dd class="modal-resumo-v">${respostas.telefone}</dd>
             </div>`
           : ''
       }
       ${
         respostas.email
-          ? `<div class="flex justify-between gap-4 border-b border-graphite-800 pb-2">
-              <dt class="text-stone-500">E-mail</dt>
-              <dd class="text-right text-stone-200">${respostas.email}</dd>
+          ? `<div class="modal-resumo-linha">
+              <dt class="modal-resumo-k">E-mail</dt>
+              <dd class="modal-resumo-v">${respostas.email}</dd>
             </div>`
           : ''
       }
     </dl>
 
-    <p class="mt-4 text-xs leading-relaxed text-stone-500">
+    <p class="modal-aviso">
       Ao confirmar, você será direcionado ao WhatsApp com uma mensagem pré-preenchida com essas
       informações para o escritório.
     </p>
 
-    <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
-      <button type="button" data-triagem-edit class="text-sm text-stone-400 hover:text-bronze-300">
+    <div class="modal-acoes">
+      <button type="button" data-triagem-edit class="modal-voltar">
         ← Editar respostas
       </button>
       <a
@@ -346,7 +341,7 @@ function renderConfirmacao(): void {
         target="_blank"
         rel="noopener noreferrer"
         data-triagem-confirm
-        class="inline-flex items-center justify-center rounded bg-bronze-500 px-5 py-2.5 text-sm font-semibold text-graphite-950 hover:bg-bronze-400"
+        class="btn-modal-primario"
       >
         Confirmar e abrir WhatsApp
       </a>
