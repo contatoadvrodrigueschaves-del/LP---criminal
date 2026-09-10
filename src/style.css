@@ -222,6 +222,14 @@ section.hero, section.footer { border-top:none; }
 .cl { display:grid; grid-template-columns:150px 1fr; gap:16px; padding:14px 0; border-bottom:0.5px solid rgba(255,255,255,0.12); }
 .cl-k { font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:#8B88AC; padding-top:3px; }
 .cl-v { font-size:14px; line-height:1.6; color:#EDEBF5; }
+
+/* Telefone, e-mail, endereco e Instagram do rodape sao links. Sem sublinhado
+   permanente para nao poluir a lista; inline-block com padding vertical leva
+   o alvo de toque de 22px para ~40px sem alterar o espacamento entre linhas. */
+a.cl-v { display:inline-block; padding:9px 0; text-decoration:none; transition:color .2s ease; }
+a.cl-v:hover { color:#FFFFFF; text-decoration:underline; text-underline-offset:3px; }
+a.cl-v:focus-visible { outline:2px solid #C9A16B; outline-offset:3px; border-radius:2px; }
+.cl:has(a.cl-v) { padding:5px 0; }
 .contato-info .compliance { margin-top:28px; }
 @media (max-width:860px){
   .contato-grid { grid-template-columns:1fr; }
