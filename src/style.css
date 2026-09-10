@@ -148,7 +148,9 @@ h1,h2,h3 { font-family:'Roboto',sans-serif; font-weight:900; letter-spacing:-0.0
 .hero { position:relative; }
 
 
-.logo-lockup { display:flex; align-items:center; gap:12px; }
+/* O logo leva ao topo. Como virou <a>, precisa zerar a decoracao de link
+   e manter a cor dos spans internos. */
+.logo-lockup { display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit; }
 .site-header .logo-mark { width:52px; height:52px; }
 .logo-text { display:flex; flex-direction:column; line-height:1.15; }
 .logo-name { font-size:15px; font-weight:900; letter-spacing:0.04em; color:#F3E8DC; }
