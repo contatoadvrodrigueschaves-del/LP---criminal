@@ -1,32 +1,34 @@
 import './style.css';
 
-import { renderHeader } from './sections/header';
-import { renderHero } from './sections/hero';
-import { renderSituacoes } from './sections/situacoes';
-import { renderUrgencia } from './sections/urgencia';
-import { renderAtuacao } from './sections/atuacao';
-import { renderDiferencial } from './sections/diferencial';
-import { renderAreas } from './sections/areas';
-import { renderFaq } from './sections/faq';
-import { renderTriagemCta } from './sections/triagem-cta';
-import { renderFooter } from './sections/footer';
-import { mountStickyCtaBar } from './components/sticky-cta-bar';
 import { initTelTracking } from './components/phone-link';
+import { reconciliarLinksWhatsApp, attachWhatsAppTracking } from './components/whatsapp-button';
+import { openTriagemModal } from './triagem/triagem';
 import { initScrollReveal } from './lib/scroll-reveal';
+import { initParallaxHero } from './lib/parallax-hero';
+import { initHeaderScroll } from './lib/header-scroll';
 import { initHashScroll } from './lib/hash-scroll';
 
-renderHeader();
-renderHero();
-renderAtuacao();
-renderSituacoes();
-renderUrgencia();
-renderDiferencial();
-renderAreas();
-renderFaq();
-renderTriagemCta();
-renderFooter();
+/**
+ * Todo o conteúdo da página é HTML estático no index.html — a página existe
+ * mesmo sem JavaScript, que é o cenário do público de urgência em conexão
+ * instável. Este módulo cuida apenas de comportamento.
+ */
 
-mountStickyCtaBar();
+reconciliarLinksWhatsApp();
+attachWhatsAppTracking();
 initTelTracking();
+
+// "Analisar meu processo": no hero e no meio da página, abre a análise
+// multi-etapas em vez de rolar até o contato, preservando triagem_concluida.
+document.querySelector('[data-start-triagem]')?.addEventListener('click', () => {
+  openTriagemModal({ origem: 'hero' });
+});
+
+document.querySelector('[data-open-triagem]')?.addEventListener('click', () => {
+  openTriagemModal({ origem: 'provas_digitais' });
+});
+
 initScrollReveal();
+initParallaxHero();
+initHeaderScroll();
 initHashScroll();

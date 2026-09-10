@@ -19,15 +19,14 @@ declare global {
 export type OrigemWhatsapp =
   | 'header'
   | 'hero'
-  | 'barra_fixa'
-  | 'cta_final'
+  | 'situacoes'
   | 'rodape'
-  | 'urgencia'
+  | 'barra_fixa'
   | 'pos_triagem';
 
-export type OrigemLigacao = 'header' | 'hero' | 'barra_fixa' | 'cta_final' | 'rodape' | 'urgencia';
+export type OrigemLigacao = 'hero' | 'rodape' | 'barra_fixa';
 
-export type OrigemTriagem = 'hero' | 'cta_final';
+export type OrigemTriagem = 'hero' | 'provas_digitais';
 
 const TRIAGEM_OK_KEY = 'triagem_ok';
 
@@ -116,16 +115,23 @@ export function trackTriagemIniciada(origem: OrigemTriagem, situacao?: string): 
 /**
  * Conclusão da triagem. Valor e códigos vêm de getTriagemTrackingData —
  * a regra de valor (200/120/60) fica em src/triagem/steps.ts e não muda aqui.
+ *
+ * `apreensao` e `laudo` qualificam o caso no serviço que o escritório presta
+ * (análise de prova digital e contraprova pericial). São códigos fechados:
+ * número de processo e relato ficam de fora por serem dados pessoais.
  */
 export function trackTriagemConcluida(
   areaInteresse: string,
   urgencia: string,
   valorLead: number,
+  qualificacao: { apreensao: string; laudo: string },
 ): void {
   push('triagem_concluida', {
     area_interesse: areaInteresse,
     urgencia,
     valor_lead: valorLead,
+    apreensao: qualificacao.apreensao,
+    laudo: qualificacao.laudo,
   });
 
   marcarTriagemConcluida();
