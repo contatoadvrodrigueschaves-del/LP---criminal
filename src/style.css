@@ -81,10 +81,22 @@ h1,h2,h3 { font-family:'Roboto',sans-serif; font-weight:900; letter-spacing:-0.0
 .area-tag i { color:#B35A30; font-size:16px; margin-right:8px; }
 
 /* FAQ */
-.faq-item { border-top:0.5px solid #E4E2DC; padding:24px 0; }
-.faq-item:last-child { border-bottom:0.5px solid #E4E2DC; }
-.faq-q { font-size:15px; font-weight:500; color:#1C1C1A; margin-bottom:8px; }
-.faq-a { font-size:14px; line-height:1.7; color:#6B6862; max-width:600px; }
+/* Acordeao com <details> nativo: abre e fecha sem JavaScript, e o texto
+   continua no HTML para leitores de tela e para o Google. */
+.faq-lista { border-bottom:0.5px solid #E4E2DC; }
+.faq-item { border-top:0.5px solid #E4E2DC; }
+.faq-item summary { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:22px 0; cursor:pointer; list-style:none; }
+.faq-item summary::-webkit-details-marker { display:none; }
+.faq-item summary:focus-visible { outline:2px solid #B35A30; outline-offset:4px; border-radius:2px; }
+.faq-q { font-size:15px; font-weight:500; line-height:1.45; color:#1C1C1A; margin:0; transition:color .2s ease; }
+.faq-item summary:hover .faq-q { color:#B35A30; }
+.faq-seta { flex:none; color:#B35A30; transition:transform var(--mov-padrao) var(--mov-curva); }
+.faq-item[open] .faq-seta { transform:rotate(180deg); }
+.faq-a { font-size:14px; line-height:1.7; color:#6B6862; max-width:600px; margin:0; padding:0 36px 24px 0; }
+/* So a entrada anima: a resposta desce 4px e aparece, como folha saindo da
+   pasta. Fechar e instantaneo -- saida mais rapida que entrada. */
+.faq-item[open] .faq-a { animation:faq-abre var(--mov-padrao) var(--mov-curva); }
+@keyframes faq-abre { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:none; } }
 
 /* CONTATO / FOOTER */
 .footer { background:#0F0E47; color:#C9C6D8; padding:72px 0 40px; }
@@ -626,9 +638,14 @@ body.analise-aberta { overflow: hidden; }
 /* --- FAQ: cascata mínima --- */
 .faq-item { opacity: 0; transform: translateY(10px); transition: opacity var(--mov-padrao) var(--mov-curva), transform var(--mov-padrao) var(--mov-curva); }
 #faq.is-visible .faq-item { opacity: 1; transform: translateY(0); }
-#faq.is-visible .faq-item:nth-child(1) { transition-delay: 0ms; }
-#faq.is-visible .faq-item:nth-child(2) { transition-delay: 60ms; }
-#faq.is-visible .faq-item:nth-child(3) { transition-delay: 120ms; }
+/* 8 itens a 50ms = 350ms no total, dentro do orcamento de 500ms. */
+#faq.is-visible .faq-item:nth-child(2) { transition-delay: 50ms; }
+#faq.is-visible .faq-item:nth-child(3) { transition-delay: 100ms; }
+#faq.is-visible .faq-item:nth-child(4) { transition-delay: 150ms; }
+#faq.is-visible .faq-item:nth-child(5) { transition-delay: 200ms; }
+#faq.is-visible .faq-item:nth-child(6) { transition-delay: 250ms; }
+#faq.is-visible .faq-item:nth-child(7) { transition-delay: 300ms; }
+#faq.is-visible .faq-item:nth-child(8) { transition-delay: 350ms; }
 
 /* --- Camada ambiente: a impressão digital respira, quase imperceptível --- */
 @media (prefers-reduced-motion: no-preference) {
@@ -671,4 +688,5 @@ body.analise-aberta { overflow: hidden; }
     transition: none !important;
   }
   .fp-section, .fp-id, .fp-cite { animation: none !important; }
+  .faq-seta, .faq-item[open] .faq-a { transition: none !important; animation: none !important; }
 }
