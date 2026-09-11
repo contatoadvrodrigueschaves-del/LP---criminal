@@ -638,14 +638,11 @@ body.analise-aberta { overflow: hidden; }
 /* --- FAQ: cascata mínima --- */
 .faq-item { opacity: 0; transform: translateY(10px); transition: opacity var(--mov-padrao) var(--mov-curva), transform var(--mov-padrao) var(--mov-curva); }
 #faq.is-visible .faq-item { opacity: 1; transform: translateY(0); }
-/* 8 itens a 50ms = 350ms no total, dentro do orcamento de 500ms. */
+/* 5 itens a 50ms = 200ms no total, dentro do orcamento de 500ms. */
 #faq.is-visible .faq-item:nth-child(2) { transition-delay: 50ms; }
 #faq.is-visible .faq-item:nth-child(3) { transition-delay: 100ms; }
 #faq.is-visible .faq-item:nth-child(4) { transition-delay: 150ms; }
 #faq.is-visible .faq-item:nth-child(5) { transition-delay: 200ms; }
-#faq.is-visible .faq-item:nth-child(6) { transition-delay: 250ms; }
-#faq.is-visible .faq-item:nth-child(7) { transition-delay: 300ms; }
-#faq.is-visible .faq-item:nth-child(8) { transition-delay: 350ms; }
 
 /* --- Camada ambiente: a impressão digital respira, quase imperceptível --- */
 @media (prefers-reduced-motion: no-preference) {
