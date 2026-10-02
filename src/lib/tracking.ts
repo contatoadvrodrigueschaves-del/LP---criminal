@@ -22,6 +22,7 @@ export type OrigemWhatsapp =
   | 'situacoes'
   | 'rodape'
   | 'barra_fixa'
+  | 'wa_flutuante'
   | 'pos_triagem';
 
 export type OrigemLigacao = 'hero' | 'rodape' | 'barra_fixa';
