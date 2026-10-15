@@ -687,3 +687,78 @@ body.analise-aberta { overflow: hidden; }
   .fp-section, .fp-id, .fp-cite { animation: none !important; }
   .faq-seta, .faq-item[open] .faq-a { transition: none !important; animation: none !important; }
 }
+
+/* ============================================================
+   Banner de consentimento de cookies
+   ------------------------------------------------------------
+   z-index 70: acima da barra fixa de contato (50) e abaixo do
+   modal da triagem (80), para nunca cobrir os controles do modal.
+   No celular o banner fica EMPILHADO sobre a barra fixa, nunca por
+   cima dela: "Falar agora" e "Ligar" sao o caminho de conversao de
+   quem chega com urgencia e precisam continuar clicaveis.
+   ============================================================ */
+.consent-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px 24px;
+  padding: 16px 20px calc(16px + env(safe-area-inset-bottom));
+  background: #0F0E47;
+  border-top: 0.5px solid rgba(243, 232, 220, 0.2);
+}
+.consent-texto {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #EDEBF5;
+  max-width: 620px;
+}
+.consent-texto a { color: #E3C4A8; text-decoration: underline; text-underline-offset: 3px; }
+.consent-texto a:hover { color: #FFFFFF; }
+.consent-acoes { display: flex; gap: 10px; flex: none; }
+/* Os dois botoes tem o mesmo peso visual de proposito: destacar "Aceitar"
+   invalidaria o consentimento por induzir a escolha. */
+.consent-btn {
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #F3E8DC;
+  background: transparent;
+  border: 1px solid rgba(243, 232, 220, 0.5);
+  border-radius: 4px;
+  padding: 11px 24px;
+  min-width: 116px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.consent-btn:hover { background: rgba(243, 232, 220, 0.12); border-color: #F3E8DC; }
+.consent-btn:focus-visible { outline: 2px solid #C9A16B; outline-offset: 3px; }
+
+@media (max-width: 720px) {
+  /* 68px e a altura da barra fixa; o env() dela ja esta incluso no proprio
+     padding da barra, entao soma de novo aqui para o banner subir junto. */
+  .consent-banner {
+    bottom: calc(68px + env(safe-area-inset-bottom));
+    padding: 14px 16px;
+    gap: 12px;
+    justify-content: flex-start;
+  }
+  .consent-texto { font-size: 13px; }
+  .consent-acoes { width: 100%; }
+  .consent-btn { flex: 1; min-width: 0; padding: 13px 10px; }
+  /* Enquanto o banner ocupa espaco, o conteudo precisa de folga extra para
+     o fim da pagina nao ficar escondido atras dos dois. */
+  body.consent-visivel { padding-bottom: 210px; }
+}
+
+/* O modal da triagem ja esconde a barra fixa; o banner segue a mesma regra
+   para nao competir com os controles da analise. */
+body.analise-aberta .consent-banner { display: none; }
+
+@media print { .consent-banner { display: none !important; } }

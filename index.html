@@ -3,6 +3,30 @@
   <head>
     <meta charset="UTF-8" />
 
+    <!-- Consent Mode v2 — precisa rodar ANTES do gtm.js para que o default
+         "denied" ja esteja no dataLayer quando o container carregar. -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag("consent", "default", {
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+        analytics_storage: "denied",
+        wait_for_update: 500
+      });
+      try {
+        if (localStorage.getItem("crim_consentimento_cookies") === "aceito") {
+          gtag("consent", "update", {
+            ad_storage: "granted",
+            ad_user_data: "granted",
+            ad_personalization: "granted",
+            analytics_storage: "granted"
+          });
+        }
+      } catch (e) {}
+    </script>
+
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -311,5 +335,21 @@
 </div>
     <div id="triagem-modal-root"></div>
     <script type="module" src="/src/main.ts"></script>
+  
+    <!-- Banner de consentimento. Comeca escondido: o JS so mostra se ainda
+         nao houver escolha salva, evitando piscar para quem ja decidiu.
+         O texto abaixo e para revisao da advogada. -->
+    <div class="consent-banner" data-consent-banner hidden role="dialog" aria-live="polite"
+         aria-label="Aviso de cookies">
+      <p class="consent-texto">
+        Usamos cookies para medir o acesso e melhorar nossos anúncios. Você pode aceitar ou rejeitar.
+        <a href="/privacidade.html">Política de privacidade</a>
+      </p>
+      <div class="consent-acoes">
+        <button type="button" class="consent-btn" data-consent="rejeitado">Rejeitar</button>
+        <button type="button" class="consent-btn" data-consent="aceito">Aceitar</button>
+      </div>
+    </div>
+
   </body>
 </html>
