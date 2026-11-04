@@ -712,6 +712,9 @@ body.analise-aberta { overflow: hidden; }
   background: #0F0E47;
   border-top: 0.5px solid rgba(243, 232, 220, 0.2);
 }
+/* O display:flex acima anula o atributo hidden do navegador; sem esta regra
+   o banner nunca some depois do clique em Aceitar/Rejeitar. */
+.consent-banner[hidden] { display: none; }
 .consent-texto {
   margin: 0;
   font-size: 13.5px;
