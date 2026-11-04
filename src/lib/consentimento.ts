@@ -1,9 +1,10 @@
 /**
- * Banner de consentimento de cookies + Google Consent Mode v2.
+ * Banner de consentimento de cookies + Google Consent Mode v2 (modelo opt-out).
  *
- * O *default* (tudo "denied") NAO mora aqui: ele e um script inline no <head>
- * do index.html, porque precisa estar no dataLayer antes do gtm.js carregar.
- * Este modulo cuida so do banner e do "update" apos a escolha.
+ * O *default* NAO mora aqui: ele e um script inline no <head> do index.html,
+ * porque precisa estar no dataLayer antes do gtm.js carregar. La tudo comeca
+ * "granted" e so fica "denied" para quem ja rejeitou. Este modulo cuida so do
+ * banner e do "update" apos a escolha.
  *
  * Nada aqui toca em src/lib/tracking.ts: os eventos clique_whatsapp,
  * clique_ligacao, triagem_iniciada e triagem_concluida continuam sendo
@@ -11,7 +12,9 @@
  * o que o Google pode gravar no navegador, nao o que a pagina dispara.
  */
 
-const CHAVE = 'crim_consentimento_cookies';
+const CHAVE = 'consentimento_cookies';
+/** Chave da versao opt-in. Ainda lida para nao reativar quem ja rejeitou. */
+const CHAVE_ANTIGA = 'crim_consentimento_cookies';
 
 type Escolha = 'aceito' | 'rejeitado';
 
@@ -25,7 +28,8 @@ declare global {
 /** localStorage lanca em modo privado ou com armazenamento bloqueado. */
 function lerEscolha(): Escolha | null {
   try {
-    const valor = window.localStorage.getItem(CHAVE);
+    const valor =
+      window.localStorage.getItem(CHAVE) ?? window.localStorage.getItem(CHAVE_ANTIGA);
     return valor === 'aceito' || valor === 'rejeitado' ? valor : null;
   } catch {
     return null;
@@ -36,8 +40,8 @@ function gravarEscolha(escolha: Escolha): void {
   try {
     window.localStorage.setItem(CHAVE, escolha);
   } catch {
-    // Sem armazenamento a escolha vale so para esta visita. O banner volta na
-    // proxima, o que e preferivel a assumir consentimento que nao foi dado.
+    // Sem armazenamento a escolha vale so para esta visita e o banner volta na
+    // proxima. Quem rejeitou ja teve o "update" para "denied" nesta pagina.
   }
 }
 

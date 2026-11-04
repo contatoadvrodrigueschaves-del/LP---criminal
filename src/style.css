@@ -745,16 +745,18 @@ body.analise-aberta { overflow: hidden; }
      padding da barra, entao soma de novo aqui para o banner subir junto. */
   .consent-banner {
     bottom: calc(68px + env(safe-area-inset-bottom));
-    padding: 14px 16px;
-    gap: 12px;
+    padding: 10px 14px;
+    gap: 8px;
     justify-content: flex-start;
   }
-  .consent-texto { font-size: 13px; }
-  .consent-acoes { width: 100%; }
-  .consent-btn { flex: 1; min-width: 0; padding: 13px 10px; }
+  /* Compacto: texto menor e botoes mais baixos para o banner ocupar o minimo
+     de tela acima da barra do WhatsApp. 40px ainda e um alvo de toque seguro. */
+  .consent-texto { font-size: 12px; line-height: 1.45; }
+  .consent-acoes { width: 100%; gap: 8px; }
+  .consent-btn { flex: 1; min-width: 0; padding: 0 10px; height: 40px; font-size: 13.5px; }
   /* Enquanto o banner ocupa espaco, o conteudo precisa de folga extra para
      o fim da pagina nao ficar escondido atras dos dois. */
-  body.consent-visivel { padding-bottom: 210px; }
+  body.consent-visivel { padding-bottom: 200px; }
 }
 
 /* O modal da triagem ja esconde a barra fixa; o banner segue a mesma regra
