@@ -6,6 +6,7 @@ import { openTriagemModal } from './triagem/triagem';
 import { initScrollReveal } from './lib/scroll-reveal';
 import { initHeaderScroll } from './lib/header-scroll';
 import { initHashScroll } from './lib/hash-scroll';
+import { initConsentimento } from './lib/consentimento';
 
 /**
  * Todo o conteúdo da página é HTML estático no index.html — a página existe
@@ -30,3 +31,4 @@ document.querySelector('[data-open-triagem]')?.addEventListener('click', () => {
 initScrollReveal();
 initHeaderScroll();
 initHashScroll();
+initConsentimento();

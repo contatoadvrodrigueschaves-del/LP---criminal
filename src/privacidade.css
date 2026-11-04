@@ -1,0 +1,81 @@
+/* Estilos da página de política de privacidade.
+   Reaproveita a paleta e a fonte do site (style.css) e acrescenta só o
+   necessário para um texto corrido longo ficar legível. */
+
+.priv {
+  background: #FFFFFF;
+  min-height: 100vh;
+  padding: 48px 20px 80px;
+}
+
+.priv-wrap {
+  max-width: 680px;
+  margin: 0 auto;
+  font-family: 'Roboto', sans-serif;
+  color: #3A3835;
+}
+
+.priv-voltar {
+  display: inline-block;
+  font-size: 13.5px;
+  color: #B35A30;
+  text-decoration: none;
+  margin-bottom: 32px;
+}
+.priv-voltar:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Tarja de rascunho: forte de propósito, para ninguém publicar sem revisar. */
+.priv-rascunho {
+  border-left: 3px solid #B35A30;
+  background: #FAF4EF;
+  padding: 16px 18px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #3A3835;
+  margin-bottom: 36px;
+}
+.priv-rascunho strong { color: #B35A30; }
+
+.priv-wrap h1 {
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1.2;
+  color: #1C1C1A;
+  margin: 0 0 8px;
+}
+
+.priv-data { font-size: 13px; color: #8A877E; margin: 0 0 36px; }
+
+.priv-wrap h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1C1C1A;
+  margin: 36px 0 12px;
+}
+
+.priv-wrap p {
+  font-size: 14.5px;
+  line-height: 1.75;
+  margin: 0 0 14px;
+}
+
+.priv-wrap a { color: #B35A30; }
+
+.priv-wrap code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12.5px;
+  background: #F4F2EE;
+  border: 0.5px solid #E4E2DC;
+  border-radius: 3px;
+  padding: 2px 6px;
+  color: #B35A30;
+}
+
+.priv-oab {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 0.5px solid #E4E2DC;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: #8A877E;
+}

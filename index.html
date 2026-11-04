@@ -3,6 +3,24 @@
   <head>
     <meta charset="UTF-8" />
 
+    <!-- Consent Mode v2 (opt-out) — precisa rodar ANTES do gtm.js para que o
+         default ja esteja no dataLayer quando o container carregar. Tudo comeca
+         "granted"; so fica "denied" para quem clicou em Rejeitar. A chave antiga
+         (crim_consentimento_cookies) ainda e lida para respeitar quem ja rejeitou. -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      var escolha = null;
+      try { escolha = localStorage.getItem('consentimento_cookies') || localStorage.getItem('crim_consentimento_cookies'); } catch(e) {}
+      var estado = escolha === 'rejeitado' ? 'denied' : 'granted';
+      gtag('consent', 'default', {
+        ad_storage: estado,
+        ad_user_data: estado,
+        ad_personalization: estado,
+        analytics_storage: estado
+      });
+    </script>
+
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -311,5 +329,21 @@
 </div>
     <div id="triagem-modal-root"></div>
     <script type="module" src="/src/main.ts"></script>
+  
+    <!-- Banner de consentimento. Comeca escondido: o JS so mostra se ainda
+         nao houver escolha salva, evitando piscar para quem ja decidiu.
+         O texto abaixo e para revisao da advogada. -->
+    <div class="consent-banner" data-consent-banner hidden role="dialog" aria-live="polite"
+         aria-label="Aviso de cookies">
+      <p class="consent-texto">
+        Usamos cookies para medir o desempenho do site e de nossos anúncios. Você pode rejeitar a qualquer momento.
+        <a href="/privacidade.html">Política de privacidade</a>
+      </p>
+      <div class="consent-acoes">
+        <button type="button" class="consent-btn" data-consent="aceito">Aceitar</button>
+        <button type="button" class="consent-btn" data-consent="rejeitado">Rejeitar</button>
+      </div>
+    </div>
+
   </body>
 </html>
