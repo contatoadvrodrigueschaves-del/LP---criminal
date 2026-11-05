@@ -768,33 +768,19 @@ body.analise-aberta .consent-banner { display: none; }
 
 @media print { .consent-banner { display: none !important; } }
 
-/* --- Retrato da advogada no hero ---
-   Recorte sem fundo (larissa-recorte.webp) sobre a foto de Sao Paulo.
-   Em defesa criminal o cliente contrata a pessoa: o rosto fica na primeira
-   tela, ao lado da oferta, e nao num avatar pequeno. */
-.hero { overflow:hidden; }
-.hero-retrato {
-  position:absolute; z-index:1; bottom:0;
-  right:max(0px, calc((100vw - 1040px) / 2 - 40px));
-  height:90%; max-height:780px; width:auto;
-  -webkit-mask-image:linear-gradient(to bottom, #000 72%, transparent 100%);
-          mask-image:linear-gradient(to bottom, #000 72%, transparent 100%);
-  pointer-events:none;
-}
-@media (min-width: 721px) {
-  .hero h1, .hero-subtitle { max-width:560px; }
-  .hero-urgencia { max-width:560px; }
-}
+/* --- Quem defende: mesma composicao da LP Medida Protetiva ---
+   Fundo navy, texto com filete terracota a esquerda, foto a direita. */
+.quem-defende { background:#0F0E47; padding:96px 0; border-top:none; }
+.qd-grid { display:grid; grid-template-columns:1.1fr 0.9fr; gap:64px; align-items:center; }
+.qd-texto { border-left:2px solid #B35A30; padding-left:32px; }
+.qd-texto h2 { color:#FFFFFF; font-size:34px; line-height:1.2; margin-bottom:20px; }
+.qd-texto p { color:rgba(255,255,255,0.85); font-size:17px; line-height:1.7; margin-bottom:28px; }
+.qd-foto { width:100%; height:auto; border-radius:2px; box-shadow:0 10px 30px rgba(0,0,0,0.25); }
 @media (max-width: 720px) {
-  .hero .eyebrow { display:none; }
-  .hero-retrato {
-    top:72px; bottom:auto; right:-34px; height:360px; max-height:none;
-    -webkit-mask-image:linear-gradient(to bottom, #000 55%, transparent 92%);
-            mask-image:linear-gradient(to bottom, #000 55%, transparent 92%);
-  }
-  .hero-content { padding-top:300px; }
-  .hero-overlay { background:linear-gradient(0deg, rgba(38,22,13,0.97) 0%, rgba(38,22,13,0.9) 45%, rgba(43,26,16,0.55) 70%, rgba(43,26,16,0.25) 100%); }
-  .hero .wrap { position:relative; z-index:2; }
-  .hero h1 { font-size:27px; line-height:1.22; margin-bottom:12px; text-shadow:0 2px 10px rgba(20,10,4,0.7); }
-  .hero-subtitle { font-size:15px; line-height:1.55; margin-bottom:20px; }
+  .quem-defende { padding:72px 0; }
+  .qd-grid { grid-template-columns:1fr; gap:40px; }
+  .qd-texto { padding-left:22px; }
+  .qd-texto h2 { font-size:26px; }
+  .qd-texto p { font-size:15.5px; }
+  .qd-foto { max-width:320px; margin:0 auto; display:block; }
 }
