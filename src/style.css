@@ -767,3 +767,20 @@ body.analise-aberta { overflow: hidden; }
 body.analise-aberta .consent-banner { display: none; }
 
 @media print { .consent-banner { display: none !important; } }
+
+/* --- Quem defende: mesma composicao da LP Medida Protetiva ---
+   Fundo navy, texto com filete terracota a esquerda, foto a direita. */
+.quem-defende { background:#0F0E47; padding:96px 0; border-top:none; }
+.qd-grid { display:grid; grid-template-columns:1.1fr 0.9fr; gap:64px; align-items:center; }
+.qd-texto { border-left:2px solid #B35A30; padding-left:32px; }
+.qd-texto h2 { color:#FFFFFF; font-size:34px; line-height:1.2; margin-bottom:20px; }
+.qd-texto p { color:rgba(255,255,255,0.85); font-size:17px; line-height:1.7; margin-bottom:28px; }
+.qd-foto { width:100%; height:auto; border-radius:2px; box-shadow:0 10px 30px rgba(0,0,0,0.25); }
+@media (max-width: 720px) {
+  .quem-defende { padding:72px 0; }
+  .qd-grid { grid-template-columns:1fr; gap:40px; }
+  .qd-texto { padding-left:22px; }
+  .qd-texto h2 { font-size:26px; }
+  .qd-texto p { font-size:15.5px; }
+  .qd-foto { max-width:320px; margin:0 auto; display:block; }
+}
