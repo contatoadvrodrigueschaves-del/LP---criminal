@@ -767,3 +767,31 @@ body.analise-aberta { overflow: hidden; }
 body.analise-aberta .consent-banner { display: none; }
 
 @media print { .consent-banner { display: none !important; } }
+
+/* --- Advogada no hero e no rodape ---
+   Em defesa criminal o cliente contrata a pessoa: rosto, nome e OAB na
+   primeira tela, antes dos botoes. */
+.hero-advogada { display:flex; align-items:center; gap:12px; margin:-12px 0 24px; }
+.hero-advogada img { width:56px; height:56px; border-radius:50%; object-fit:cover; border:1.5px solid rgba(233,196,168,0.7); flex:none; }
+.hero-advogada div { display:flex; flex-direction:column; line-height:1.35; }
+.hero-advogada-nome { font-size:15px; font-weight:600; color:#FFFFFF; }
+.hero-advogada-oab { font-size:12.5px; color:#E3C4A8; }
+.contato-foto img.contato-foto-advogada { object-position:center 20%; filter:none; }
+@media (max-width: 720px) {
+  .hero-advogada { margin:-14px 0 20px; }
+  .hero-advogada img { width:48px; height:48px; }
+  .contato-foto { min-height:380px; }
+}
+@media (max-width: 720px) {
+  /* Primeira tela do celular: rosto, oferta e botao antes do aviso de cookies.
+     O sobretitulo some aqui porque o H1 e o cartao da advogada ja dizem a area. */
+  .hero .eyebrow { display:none; }
+  .hero-content { padding-top:96px; }
+  .hero h1 { font-size:26px; line-height:1.25; margin-bottom:14px; }
+  .hero-subtitle { font-size:15px; line-height:1.55; margin-bottom:22px; }
+  /* Aviso de cookies em duas linhas: texto curto + botoes lado a lado. */
+  .consent-banner { padding:8px 12px; gap:6px; }
+  .consent-texto { font-size:11.5px; line-height:1.4; }
+  .consent-btn { height:34px; font-size:13px; }
+  body.consent-visivel { padding-bottom:160px; }
+}
